@@ -1,0 +1,55 @@
+.tiles {
+  display: flex;
+}
+
+.example-card {
+  margin: 8px;
+  max-width: 300px;
+}
+
+
+
+
+.card-avatar {
+  background-size: cover;
+}
+
+.questionBody {
+  display: flex;
+  justify-content: space-between;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.dateOfCreation {
+  margin: 20px 8px 0 8px;
+  padding: 4px 5px 8px 5px;
+}
+
+.questionTags {
+  margin: 20px 8px 0 8px;
+  padding: 4px 5px 8px 5px;
+}
+
+.cardTitle {
+  display: flex;
+  justify-content: center;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+.cardTitle mat-card-title {
+  font-size: 1.5rem;
+}
+
+.buttons {
+  display: flex;
+  Justify-content:space-around;
+
+  padding: 20px;
+}
+
+.cardContent {
+  margin: 0;
+}

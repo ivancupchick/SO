@@ -1,0 +1,14 @@
+mat-card {
+  margin-top: 8px;
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-container > * {
+  width: 100%;
+}
+button {
+  margin-left: 8px;
+}

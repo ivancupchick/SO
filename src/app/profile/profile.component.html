@@ -1,0 +1,53 @@
+<!--
+<div *ngIf="user">
+  <h2>Hey {{ user.displayName }}!</h2>
+  <h3>Your uid: {{ user.uid }}</h3>
+  <h3 *ngIf="user.email" >Email: {{ user.email }}</h3>
+  <h3>Your email verified: {{ user.emailVerified }}</h3>
+  <h3>You are anonymous: {{ user.isAnonymous }}</h3>
+  <h3>Date of creation: {{ user.metadata.creationTime }}</h3>
+  <h3 *ngIf="user.phoneNumber">Phone number: {{ user.phoneNumber }}</h3>
+</div>
+-->
+
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Personal data
+      </mat-panel-title>
+      <mat-panel-description>
+        Name, Email, Time of Creation
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-list>
+      <mat-list-item *ngIf="user.displayName">{{ user.displayName }}</mat-list-item>
+      <mat-divider *ngIf="user.displayName"></mat-divider>
+      <mat-list-item *ngIf="userInfo?.role">You are {{userInfo?.role}}</mat-list-item>
+      <mat-divider *ngIf="userInfo?.role"></mat-divider>
+      <mat-list-item>{{ user.email }}</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>{{ user.metadata.creationTime }}</mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Setting
+      </mat-panel-title>
+      <mat-panel-description>
+        
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    
+    <mat-list>
+      <mat-list-item>
+        <button (click)="deleteUser()" color="warn" mat-raised-button>Delete profile</button>
+      </mat-list-item>
+    </mat-list>
+      
+  </mat-expansion-panel>
+</mat-accordion>
