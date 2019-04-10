@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { Comment, Quastion, LengthNumber } from './mainClasses';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -99,18 +98,6 @@ export class QuationsService {
         }
       });
     });
-    /*
-    this.linkQuastions.snapshotChanges().pipe(
-      map(changes => {
-        console.log(changes);
-        changes.forEach( c => {
-          if (c.payload.val().id === id)  {
-            sendApproveQuestion(c.key);
-          }
-        });
-      })
-    );
-    */
   }
 
   markAnswer(id: number, commentId: number) {
@@ -122,17 +109,6 @@ export class QuationsService {
         }
       });
     });
-    /*
-    this.linkQuastions.snapshotChanges().pipe(
-      map(changes => {
-        changes.forEach( c => {
-          if (c.payload.val().id === id)  {
-            quastionKey = c.payload.key;
-          }
-        });
-      })
-    );
-    */
 
     let approvedQuastion: Quastion;
     this.quastions.forEach((quastion: Quastion) => {
@@ -150,6 +126,58 @@ export class QuationsService {
       author: approvedQuastion.author,
       dateOfCreation: approvedQuastion.dateOfCreation,
       answerID: commentId,
+    });
+  }
+
+  deleteQuestion(id: number) {
+    const removeQuestionComments = (questionId: number) => {
+      this.linkComments.snapshotChanges().forEach( changes => {
+        changes.forEach( response => {
+          if (response.payload.val().quastionId === questionId) {
+            this.deleteComment(response.payload.val().id);
+          }
+        });
+      });
+    };
+
+    this.linkQuastions.snapshotChanges().forEach( changes => {
+      changes.forEach( response => {
+          if (response.payload.val().id === id)  {
+          this.linkQuastions.remove(response.key);
+          removeQuestionComments(id);
+        }
+      });
+    });
+  }
+
+  deleteComment(id: number) {
+    this.linkComments.snapshotChanges().forEach( changes => {
+      changes.forEach( response => {
+          if (response.payload.val().id === id)  {
+          this.linkComments.remove(response.key);
+        }
+      });
+    });
+  }
+
+  editQuestion(id: number, questionForSend: Quastion) {
+    const sendApproveQuestion = (key: string) => {
+      let approvedQuastion: Quastion;
+      this.quastions.forEach((question: Quastion) => {
+        if (question.id === +id) {
+          approvedQuastion = question;
+        }
+      });
+
+      this.linkQuastions.set(key, questionForSend);
+    };
+    console.log(id, questionForSend);
+    this.linkQuastions.snapshotChanges().forEach( changes => {
+      changes.forEach( response => {
+          if (response.payload.val().id === +id)  {
+          sendApproveQuestion(response.key);
+        }
+      });
     });
   }
 }

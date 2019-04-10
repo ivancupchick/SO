@@ -11,7 +11,6 @@ import { UserInfo } from '../mainClasses';
   styleUrls: ['./quastion.component.css']
 })
 export class QuastionComponent implements OnInit {
-
   quastionId: number;
   quastion: any;
   user: User;
@@ -61,7 +60,7 @@ export class QuastionComponent implements OnInit {
     this.dbServise.sendComment({
       id: 0,
       description: formData.value.commentDescription,
-      quastionId: this.quastionId,
+      quastionId: +this.quastionId,
       author: this.user.uid,
       dataOfCreation: +now,
     });
@@ -77,6 +76,42 @@ export class QuastionComponent implements OnInit {
 
   showUserName(uid: string) {
     return this.authService.getUserInfoFromDBWithUID(uid).name;
+  }
+
+  approveQuestion(id: number) {
+    this.dbServise.approveQuastion(id);
+  }
+
+  formatDate(dateInMs: number) {
+    const dateOfCreation: Date = new Date(dateInMs);
+    let day: string = '' + dateOfCreation.getDate();
+    if (+day < 10) { day = '0' + day; }
+    let month: string = '' + (dateOfCreation.getMonth() + 1);
+    if (+month < 10) { month = '0' + month; }
+    return `${day}.${month}.${dateOfCreation.getFullYear()}`;
+  }
+
+  formatTags(tagsArray: string[]) {
+    if (tagsArray.length === 0) {
+      return '';
+    }
+    let result: string = `${tagsArray[0]}`;
+    tagsArray.forEach( (element: string, i: number) => {
+      if (i !== 0) {
+        if (element) {
+          result += ` | ${element}`;
+        }
+      }
+    });
+    return result;
+  }
+
+  deleteQuestion(id: number) {
+    this.dbServise.deleteQuestion(id);
+  }
+
+  deleteComment(id: number) {
+    this.dbServise.deleteComment(id);
   }
 
   ngOnInit() {

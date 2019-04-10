@@ -1,15 +1,38 @@
-<mat-card *ngIf="quastion" class="example-card">
-  <mat-card-header>
-    <mat-card-title>{{showUserName(quastion.author)}}</mat-card-title>
-    <mat-card-subtitle>{{showUserEmail(quastion.author)}}</mat-card-subtitle>
-    <div mat-card-avatar style.background-image="url({{showUserPhotoURL(quastion.author)}})" class="card-avatar"></div>
+<mat-card *ngIf="quastion" class="example-card">    
+  <div class="authorAndDate">
+    <div class="author">
+        <div mat-card-avatar style.background-image="url({{showUserPhotoURL(quastion.author)}})" class="card-avatar"></div>
+        <div class="example-container">
+          <div>{{showUserName(quastion.author)}}</div>
+          <div>{{showUserEmail(quastion.author)}}</div>
+        </div>
+    </div>
+    <div></div>
+    <div>
+      {{formatDate(quastion.dateOfCreation)}}
+    </div>
+  </div>
+
+  <mat-card-header class="formWindowHeader">
+    <mat-card-title>
+      {{quastion.title}}
+    </mat-card-title>
+    <mat-card-subtitle><hr></mat-card-subtitle>
   </mat-card-header>
-  
   <mat-card-content>
     <p>
       {{quastion.description}}
     </p>
   </mat-card-content>
+  <mat-card-footer class="buttons">
+    <div class="questionTags">
+      {{formatTags(quastion.tags)}}
+    </div>
+    <div>
+      <button color="primary" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="approveQuestion(quastion.id)" mat-raised-button>Approve</button>
+      <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>    
+    </div>
+  </mat-card-footer>
 </mat-card>
 
 
@@ -26,11 +49,11 @@
     </p>
   </mat-card-content>
   <button *ngIf="comment.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button color="primary">Edit</button>
-  <button *ngIf="comment.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button color="warn">Delete</button>
+  <button *ngIf="comment.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button (click)="deleteComment(comment.id)" color="warn">Delete</button>
 
 </mat-card>
 
-<mat-card>
+<mat-card class="example-card">
   <form class="example-container" #formData='ngForm' (ngSubmit)="onSubmit(formData)" >
     <mat-form-field>
       <mat-label>Answer Title</mat-label>

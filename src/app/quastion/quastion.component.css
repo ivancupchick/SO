@@ -8,7 +8,44 @@ mat-card {
 
 .example-container > * {
   width: 100%;
+  font-size: 2vmin
 }
 button {
   margin-left: 8px;
+}
+
+.formWindowHeader {
+  display: flex;
+  justify-content: center;
+}
+.formWindowHeader mat-card-title {
+  font-size: 5vmin;
+  padding: 0 3vmin;
+}
+
+.authorAndDate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author {
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
+.author > * {
+  margin: 5px;
+}
+
+.example-card {
+  max-width: 800px;
+  margin: 4px auto;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
 }

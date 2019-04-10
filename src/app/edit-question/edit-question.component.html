@@ -1,0 +1,40 @@
+<mat-card class="formWindow">
+  <mat-card-header class="formWindowHeader">
+    <mat-card-title>
+      Edit question
+    </mat-card-title>
+    <mat-card-subtitle><hr></mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="example-container">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="title" placeholder="Title" required>
+        <mat-hint></mat-hint>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Discription</mat-label>
+        <textarea matInput maxlength="1000" [(ngModel)]="description" placeholder="Descripton" required></textarea>
+      </mat-form-field>
+      <div class="tags">
+        <div class="tagsLabel"><p>tags: </p></div>
+        <div class="checkboxes">
+          <p>
+            <mat-checkbox [(ngModel)]="tag1" name="tag1">tag1</mat-checkbox>
+          </p>
+          <p>
+            <mat-checkbox [(ngModel)]="tag2" name="tag2">tag2</mat-checkbox>
+          </p>
+          <p>
+            <mat-checkbox [(ngModel)]="tag3" name="tag3">tag3</mat-checkbox>
+          </p>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions class="cardActions">
+    <button mat-raised-button (click)="updateQuestion()" color="primary">OK</button>
+    <button mat-raised-button color="warn">Cancel</button>
+  </mat-card-actions>
+</mat-card>

@@ -35,6 +35,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { QuastionComponent } from './quastion/quastion.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { EditQuestionComponent } from './edit-question/edit-question.component';
 
 
 
@@ -48,6 +49,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CreatequastionComponent,
     QuastionsComponent,
     QuastionComponent,
+    EditQuestionComponent,
   ],
   imports: [
     BrowserModule,

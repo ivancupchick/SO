@@ -24,7 +24,7 @@
       <mat-card-footer class="buttons">
         <button color="primary" routerLink="/quastion/{{quastion.id}}" mat-raised-button>Answer</button>
         <button color="primary" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="approveQuestion(quastion.id)" mat-raised-button>Approve</button>
-        <button color="warn" mat-raised-button>Delete</button>      
+        <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>      
       </mat-card-footer>
 
     </mat-card>

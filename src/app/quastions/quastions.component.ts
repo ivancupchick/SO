@@ -65,4 +65,8 @@ export class QuastionsComponent implements OnInit {
     });
     return result;
   }
+
+  deleteQuestion(id: number) {
+    this.dbService.deleteQuestion(id);
+  }
 }

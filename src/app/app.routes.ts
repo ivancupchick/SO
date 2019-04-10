@@ -9,6 +9,7 @@ import { AuthGuard } from './auth.guard';
 import { CreatequastionComponent } from './createquastion/createquastion.component';
 import { QuastionsComponent } from './quastions/quastions.component';
 import { QuastionComponent } from './quastion/quastion.component';
+import { EditQuestionComponent } from './edit-question/edit-question.component';
 
 export const router: Routes = [
   { path: '', redirectTo: 'quastions', pathMatch: 'full' },
@@ -16,6 +17,7 @@ export const router: Routes = [
   { path: 'profile/:id', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'quastion', component: CreatequastionComponent, canActivate: [AuthGuard] },
   { path: 'quastion/:id', component: QuastionComponent },
+  { path: 'editquastion/:id', component: EditQuestionComponent },
 ];
 
 export const routes: ModuleWithProviders = RouterModule.forRoot(router);
