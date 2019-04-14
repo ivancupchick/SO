@@ -125,12 +125,7 @@ export class AuthService {
     this.afAuth.auth.signOut();
   }
 
-  get authenticated(): boolean {
-    console.log(this.afAuth.authState);
-    return this.afAuth.authState._isScalar;
-  }
-
   get currentUserObservable(): Observable<User> {
     return this.afAuth.authState;
-}
+  }
 }
