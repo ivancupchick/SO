@@ -30,7 +30,8 @@
     </div>
     <div>
       <button color="primary" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="approveQuestion(quastion.id)" mat-raised-button>Approve</button>
-      <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>    
+      <button routerLink="/editquastion/{{quastionId}}" *ngIf="quastion.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button color="accent">Edit</button>
+      <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' || quastion.author === user?.uid" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>    
     </div>
   </mat-card-footer>
 </mat-card>

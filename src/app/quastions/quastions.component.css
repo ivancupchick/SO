@@ -53,3 +53,9 @@
 .cardContent {
   margin: 0;
 }
+
+.plus {
+  position: absolute;
+  right: 10%;
+  bottom: 10%;
+}

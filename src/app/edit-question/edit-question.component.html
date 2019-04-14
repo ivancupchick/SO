@@ -34,7 +34,7 @@
     </div>
   </mat-card-content>
   <mat-card-actions class="cardActions">
-    <button mat-raised-button (click)="updateQuestion()" color="primary">OK</button>
-    <button mat-raised-button color="warn">Cancel</button>
+    <button mat-raised-button routerLink="/quastion/{{questionId}}" (click)="updateQuestion()" color="primary">OK</button>
+    <button mat-raised-button routerLink="/quastions" color="warn">Cancel</button>
   </mat-card-actions>
 </mat-card>
