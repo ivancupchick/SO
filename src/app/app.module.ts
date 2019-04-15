@@ -36,7 +36,7 @@ import { QuastionComponent } from './quastion/quastion.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EditQuestionComponent } from './edit-question/edit-question.component';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 @NgModule({
@@ -73,6 +73,7 @@ import { EditQuestionComponent } from './edit-question/edit-question.component';
     MatGridListModule,
     MatSidenavModule,
     MatCheckboxModule,
+    MatButtonToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

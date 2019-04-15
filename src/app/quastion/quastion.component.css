@@ -49,3 +49,7 @@ button {
   align-items: center;
   margin: 10px;
 }
+
+.asAnswer {
+  background: rgb(180, 255, 184) ;
+}

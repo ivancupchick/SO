@@ -1,57 +1,6 @@
-.tiles {
-  display: flex;
-}
-
-.example-card {
-  margin: 8px;
-  max-width: 300px;
-}
-
-
-
-
+/* Global styles */ 
 .card-avatar {
   background-size: cover;
-}
-
-.questionBody {
-  display: flex;
-  justify-content: space-between;
-
-  padding-bottom: 10px;
-  border-bottom: 1px solid black;
-}
-
-.dateOfCreation {
-  margin: 20px 8px 0 8px;
-  padding: 4px 5px 8px 5px;
-}
-
-.questionTags {
-  margin: 20px 8px 0 8px;
-  padding: 4px 5px 8px 5px;
-}
-
-.cardTitle {
-  display: flex;
-  justify-content: center;
-
-  padding-bottom: 10px;
-  border-bottom: 1px solid black;
-}
-.cardTitle mat-card-title {
-  font-size: 1.5rem;
-}
-
-.buttons {
-  display: flex;
-  Justify-content:space-around;
-
-  padding: 20px;
-}
-
-.cardContent {
-  margin: 0;
 }
 
 .plus {
@@ -59,3 +8,133 @@
   right: 10%;
   bottom: 10%;
 }
+
+.displaynone {
+  display:none;
+}
+
+/* Tiles styles */ 
+.tiles {
+  display: flex;
+  justify-content: space-around;
+}
+
+.tiles div mat-card {
+  margin: 8px;
+  min-width: 300px;
+}
+
+.tiles div mat-card mat-card-header {
+  display: flex;
+  justify-content: center;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.tiles div mat-card mat-card-header mat-card-title {
+  font-size: 1.5rem;
+}
+
+.tiles div mat-card mat-card-content {
+  margin: 0;
+}
+
+.tiles div mat-card mat-card-content .questionBody {
+  display: flex;
+  justify-content: space-between;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.tiles div mat-card mat-card-content .description {
+  display: none;
+}
+
+.tiles div mat-card mat-card-content .questionBody .dateOfCreation {
+  margin: 20px 8px 0 8px;
+  padding: 4px 5px 8px 5px;
+}
+
+.tiles div mat-card mat-card-content .questionBody .questionTags {
+  margin: 20px 8px 0 8px;
+  padding: 4px 5px 8px 5px;
+}
+
+.tiles div mat-card mat-card-footer {
+  display: flex;
+  Justify-content:space-around;
+
+  padding: 20px;
+}
+
+.tiles div mat-card mat-card-footer button {
+  margin: 0 5px;
+}
+
+/* Lines styles */ 
+
+.lines {
+  
+}
+
+.lines div mat-card {
+  margin: 8px;
+}
+
+.lines div mat-card mat-card-header {
+  display: flex;
+  justify-content: center;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.lines div mat-card mat-card-header mat-card-title {
+  font-size: 1.5rem;
+}
+
+.lines div mat-card mat-card-content {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.lines div mat-card mat-card-content .questionBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: 10px
+}
+
+.lines div mat-card mat-card-content .questionBody .dateOfCreation {
+
+}
+
+.lines div mat-card mat-card-content .questionBody .free {
+  display: none;
+}
+
+.lines div mat-card mat-card-content .questionBody .questionTags {
+  white-space: nowrap
+}
+
+.lines div mat-card mat-card-footer {
+  display: flex;
+  justify-content: flex-end;
+
+  padding: 20px;
+}
+
+.lines div mat-card mat-card-footer button {
+  margin: 0 5px;
+}
+
+
+
+
+
+
+

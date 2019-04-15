@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { QuationsService } from '../quations.service';
 import { User } from 'firebase/app';
 import { AuthService } from '../auth.service';
-import { UserInfo } from '../mainClasses';
+import { UserInfo, Comment, Quastion } from '../mainClasses';
 
 @Component({
   selector: 'app-quastion',
@@ -12,18 +12,17 @@ import { UserInfo } from '../mainClasses';
 })
 export class QuastionComponent implements OnInit {
   quastionId: number;
-  quastion: any;
+  quastion: Quastion;
   user: User;
   userInfo: UserInfo;
 
-  comments: any[] = [];
+  comments: Comment[] = [];
 
   constructor(private route: ActivatedRoute,
               private dbServise: QuationsService,
               private authService: AuthService) {
     route.params.subscribe( (id) => {
-      console.log(id.id);
-      this.quastionId = id.id;
+      this.quastionId = +id.id;
     });
 
     this.userInfo = this.authService.getCurrentUserInfo();
@@ -31,13 +30,12 @@ export class QuastionComponent implements OnInit {
     dbServise.getQuastionsValuesChanges().subscribe( response => {
       response.forEach(quastion => {
         if (quastion.id === +this.quastionId) {
-          console.log(quastion);
           this.quastion = quastion;
         }
       });
     });
 
-    authService.getUser().subscribe( user => {
+    authService.getUser().subscribe( (user: User) => {
       this.user = user;
     });
 
@@ -46,15 +44,12 @@ export class QuastionComponent implements OnInit {
         console.log(comment);
         if (comment.quastionId === this.quastionId) {
           this.comments[this.comments.length] = comment;
-          // Array.call(this.comments, comment);
-          // this.comments.push(comment);
-          console.log(this.comments);
         }
       });
     });
   }
 
-  onSubmit(formData) {
+  onSubmit(formData: any) {
     const now = new Date();
     console.log(formData.value);
     this.dbServise.sendComment({
@@ -62,7 +57,7 @@ export class QuastionComponent implements OnInit {
       description: formData.value.commentDescription,
       quastionId: +this.quastionId,
       author: this.user.uid,
-      dataOfCreation: +now,
+      dateOfCreation: +now,
     });
   }
 
@@ -82,20 +77,11 @@ export class QuastionComponent implements OnInit {
     this.dbServise.approveQuastion(id);
   }
 
-  formatDate(dateInMs: number) {
-    const dateOfCreation: Date = new Date(dateInMs);
-    let day: string = '' + dateOfCreation.getDate();
-    if (+day < 10) { day = '0' + day; }
-    let month: string = '' + (dateOfCreation.getMonth() + 1);
-    if (+month < 10) { month = '0' + month; }
-    return `${day}.${month}.${dateOfCreation.getFullYear()}`;
-  }
-
   formatTags(tagsArray: string[]) {
     if (tagsArray.length === 0) {
       return '';
     }
-    let result: string = `${tagsArray[0]}`;
+    let result = `${tagsArray[0]}`;
     tagsArray.forEach( (element: string, i: number) => {
       if (i !== 0) {
         if (element) {
@@ -112,6 +98,10 @@ export class QuastionComponent implements OnInit {
 
   deleteComment(id: number) {
     this.dbServise.deleteComment(id);
+  }
+
+  markComment(id: number) {
+    this.dbServise.markAnswer(id, this.quastionId);
   }
 
   ngOnInit() {

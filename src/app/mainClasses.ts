@@ -28,7 +28,7 @@ export class Comment {
     public quastionId: number,
     public description: string,
     public author: string,
-    public dataOfCreation: number,
+    public dateOfCreation: number,
   ) { }
 }
 

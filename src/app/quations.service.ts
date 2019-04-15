@@ -101,31 +101,32 @@ export class QuationsService {
   }
 
   markAnswer(id: number, commentId: number) {
-    let quastionKey: string;
+    const sendApproveQuestion = (key: string) => {
+      let approvedQuastion: Quastion;
+      this.quastions.forEach((quastion: Quastion) => {
+        if (quastion.id === id) {
+          approvedQuastion = quastion;
+        }
+      });
+
+      this.linkQuastions.set(key, {
+        approved: approvedQuastion.approved,
+        title: approvedQuastion.title,
+        id: approvedQuastion.id,
+        tags: approvedQuastion.tags,
+        description: approvedQuastion.description,
+        author: approvedQuastion.author,
+        dateOfCreation: approvedQuastion.dateOfCreation,
+        answerID: commentId,
+      });
+    };
+
     this.linkQuastions.snapshotChanges().forEach( (changes) => {
       changes.forEach( response => {
         if (response.payload.val().id === id)  {
-          quastionKey = response.key;
+          sendApproveQuestion(response.key);
         }
       });
-    });
-
-    let approvedQuastion: Quastion;
-    this.quastions.forEach((quastion: Quastion) => {
-      if (quastion.id === id) {
-        approvedQuastion = quastion;
-      }
-    });
-
-    this.linkQuastions.update(quastionKey, {
-      approved: approvedQuastion.approved,
-      title: approvedQuastion.title,
-      id: approvedQuastion.id,
-      tags: approvedQuastion.tags,
-      description: approvedQuastion.description,
-      author: approvedQuastion.author,
-      dateOfCreation: approvedQuastion.dateOfCreation,
-      answerID: commentId,
     });
   }
 

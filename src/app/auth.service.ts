@@ -12,7 +12,6 @@ import { UserInfo } from './mainClasses';
 export class AuthService {
   user: Observable<User>;
   userId: string;
-  isUser = false;
 
   linkUsers: any;
   users: UserInfo[];
@@ -26,22 +25,10 @@ export class AuthService {
     this.user.subscribe( (user) => {
       if (user) {
         this.userId = user.uid;
-        this.isUser = true;
-      } else {
-        this.isUser = false;
       }
     });
 
-    this.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
-      this.users = users;
-      this.usersLength = users.length + 1;
-
-      users.forEach(( userInfomation: UserInfo) => {
-        if (this.userId === userInfomation.uid) {
-          this.userInfo = userInfomation;
-        }
-      });
-    });
+    this.userInfo = this.receiveUserInfo();
   }
 
   private pushUserInfoToDB(credential: auth.UserCredential) { // users: UserInfo[]
@@ -107,6 +94,36 @@ export class AuthService {
   }
 
   getCurrentUserInfo(): UserInfo {
+    return this.userInfo;
+  }
+
+  getObservableCurrentUserInfo(): Observable<UserInfo> {
+    this.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
+      this.users = users;
+      this.usersLength = users.length + 1;
+
+      users.forEach(( userInfomation: UserInfo) => {
+        if (this.userId === userInfomation.uid) {
+          this.userInfo = userInfomation;
+          return of(userInfomation);
+        }
+      });
+    });
+    return of(this.userInfo);
+  }
+
+  receiveUserInfo(): UserInfo {
+    this.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
+      this.users = users;
+      this.usersLength = users.length + 1;
+
+      users.forEach(( userInfomation: UserInfo) => {
+        if (this.userId === userInfomation.uid) {
+          this.userInfo = userInfomation;
+          return userInfomation;
+        }
+      });
+    });
     return this.userInfo;
   }
 

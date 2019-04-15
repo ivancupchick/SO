@@ -1,37 +1,88 @@
-<div class="tiles">
-  <div *ngFor="let quastion of quastions">
-    <mat-card *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' || quastion.approved" class="example-card">
+<!--
+  <mat-toolbar style="margin-top:5px;" color="primary">
+  <mat-toolbar-row style="display:flex; justify-content: space-between;">
+  -->
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Filters
+      </mat-panel-title>
+      <mat-panel-description>
+        Sort and Setting
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; flex-direction:column;" (mouseup)="filter()">
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="isAnswered">Is answered</mat-checkbox>
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="isNotAnsweres">Is not answered</mat-checkbox>
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="onModeration" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'">On moderation</mat-checkbox>
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="myQuestions">Only my questions</mat-checkbox>
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="tag1">Tag1</mat-checkbox>
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="tag2">Tag2</mat-checkbox>
+        <mat-checkbox style="margin: 4px;" [(ngModel)]="tag3">Tag3</mat-checkbox>
+        <div>
+          <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle (click)="setPeriod(1)" value="day">In a day</mat-button-toggle>
+            <mat-button-toggle (click)="setPeriod(7)" value="week">In a week</mat-button-toggle>
+            <mat-button-toggle (click)="setPeriod(30)" value="month">In a month</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+      <div>
+        <button mat-raised-button (click)="sort()">Sort</button>
+      </div>
+      <div>
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+          <mat-button-toggle (click)="setTiles()" value="tiles">Tiles</mat-button-toggle>
+          <mat-button-toggle (click)="setLines()" value="lines">Lines</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
 
-      <mat-card-header class="cardTitle">
-        <mat-card-title>{{quastion.title}}</mat-card-title>
+
+
+<div [class.tiles]="setting" [class.lines]="!setting">
+  <div *ngFor="let question of displayQuestions">
+    <mat-card *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' || question.approved">
+
+      <mat-card-header>
+        <mat-card-title>{{question.title}}</mat-card-title>
       </mat-card-header>
     
-      <mat-card-content class="cardContent">
+      <mat-card-content>
+        <div class="description">
+          <p align="justify">
+            {{question.description}}
+          </p>
+        </div>
         <div class="questionBody">
           <div class="dateOfCreation">
-            {{formatDate(quastion.dateOfCreation)}}
+              {{question.dateOfCreation  | date:"dd.MM.yyyy"}}
           </div>
 
-          <div> </div>
+          <div class="free"> </div>
 
           <div class="questionTags">
-            {{formatTags(quastion.tags)}}
+            {{formatTags(question.tags)}}
           </div>
         </div>
-        
       </mat-card-content>
     
-      <mat-card-footer class="buttons">
-        <button color="primary" routerLink="/quastion/{{quastion.id}}" mat-raised-button>Answer</button>
-        <button color="primary" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="approveQuestion(quastion.id)" mat-raised-button>Approve</button>
-        <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>      
+      <mat-card-footer>
+        <button color="primary" routerLink="/quastion/{{question.id}}" mat-raised-button>Answer</button>
+        <button color="primary" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="approveQuestion(question.id)" mat-raised-button>Approve</button>
+        <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="deleteQuestion(question.id)" mat-raised-button>Delete</button>      
       </mat-card-footer>
 
     </mat-card>
   </div>
 </div>
 
-<button routerLink="/quastion" mat-fab class="plus">
+<!-- circle-plus new question -->
+<button [class.displaynone]="!setting" routerLink="/quastion" mat-fab class="plus">
   <mat-icon aria-label="addQuestion">add</mat-icon>
 </button>
 
