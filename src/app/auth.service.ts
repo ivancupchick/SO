@@ -97,21 +97,6 @@ export class AuthService {
     return this.userInfo;
   }
 
-  getObservableCurrentUserInfo(): Observable<UserInfo> {
-    this.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
-      this.users = users;
-      this.usersLength = users.length + 1;
-
-      users.forEach(( userInfomation: UserInfo) => {
-        if (this.userId === userInfomation.uid) {
-          this.userInfo = userInfomation;
-          return of(userInfomation);
-        }
-      });
-    });
-    return of(this.userInfo);
-  }
-
   receiveUserInfo(): UserInfo {
     this.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
       this.users = users;

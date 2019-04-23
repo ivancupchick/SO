@@ -29,14 +29,18 @@ export class QuastionsComponent implements OnInit {
   isFilterDate = false;
   dateFrom: Date;
 
-  constructor(private dbService: QuationsService, router: Router, private authService: AuthService) {
+  constructor(private dbService: QuationsService, private router: Router, private authService: AuthService) {
     this.dbService.getQuastionsValuesChanges().subscribe(response => {
       this.displayQuestions = response;
       this.questions = response;
     });
 
-    this.authService.getObservableCurrentUserInfo().subscribe( (userInformation: UserInfo) => {
-      this.userInfo = userInformation;
+    this.authService.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
+      users.forEach( (userInformation: UserInfo) => {
+        if (this.authService.userId === userInformation.uid) {
+          this.userInfo = userInformation;
+        }
+      });
     });
   }
 
@@ -71,7 +75,7 @@ export class QuastionsComponent implements OnInit {
         }
       }
     });
-    return result;
+    return result ;
   }
 
   deleteQuestion(id: number) {
@@ -117,80 +121,85 @@ export class QuastionsComponent implements OnInit {
 
   filters() {
     this.displayQuestions = [...this.questions];
-    if (this.isAnswered) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        if (question.answerID !== 0) {
-          return true;
-        }
-        return false;
-      });
-    }
-    if (this.isNotAnsweres) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        if (question.answerID === 0) {
-          return true;
-        }
-        return false;
-      });
-    }
-    if (this.onModeration) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        if (question.approved === false) {
-          return true;
-        }
-        return false;
-      });
-    }
-    if (this.myQuestions) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        if (question.author === this.userInfo.uid) {
-          return true;
-        }
-        return false;
-      });
-    }
-    if (this.tag1) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        let result = false;
-        question.tags.forEach(element => {
-          if (element === 'tag1') {
-            result = true;
+    try {
+      if (this.isAnswered) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          if (question.answerID !== 0) {
+            return true;
           }
+          return false;
         });
-        return result;
-      });
-    }
-    if (this.tag2) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        let result = false;
-        question.tags.forEach(element => {
-          if (element === 'tag2') {
-            result = true;
+      }
+      if (this.isNotAnsweres) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          if (question.answerID === 0) {
+            return true;
           }
+          return false;
         });
-        return result;
-      });
-    }
-    if (this.tag3) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        let result = false;
-        question.tags.forEach(element => {
-          if (element === 'tag3') {
-            result = true;
+      }
+      if (this.onModeration) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          if (question.approved === false) {
+            return true;
           }
+          return false;
         });
-        return result;
-      });
+      }
+      if (this.myQuestions) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          if (question.author === this.userInfo.uid) {
+            return true;
+          }
+          return false;
+        });
+      }
+      if (this.tag1) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          let result = false;
+          question.tags.forEach(element => {
+            if (element === 'tag1') {
+              result = true;
+            }
+          });
+          return result;
+        });
+      }
+      if (this.tag2) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          let result = false;
+          question.tags.forEach(element => {
+            if (element === 'tag2') {
+              result = true;
+            }
+          });
+          return result;
+        });
+      }
+      if (this.tag3) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          let result = false;
+          question.tags.forEach(element => {
+            if (element === 'tag3') {
+              result = true;
+            }
+          });
+          return result;
+        });
+      }
+      if (this.isFilterDate) {
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
+          const dateOfCreation = new Date(question.dateOfCreation);
+          if (dateOfCreation > this.dateFrom) {
+            return true;
+          }
+          return false;
+        });
+      }
+    } catch {
+      alert('You didn\'t logged'); // error message
     }
-    if (this.isFilterDate) {
-      this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-        const dateOfCreation = new Date(question.dateOfCreation);
-        if (dateOfCreation > this.dateFrom) {
-          return true;
-        }
-        return false;
-      });
-    }
+    
   }
 
   setPeriod(value: number) {

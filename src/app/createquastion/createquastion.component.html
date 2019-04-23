@@ -1,12 +1,13 @@
 <form #formData='ngForm' (ngSubmit)="onSubmit(formData)" >
-<mat-card class="formWindow">
-  <mat-card-header class="formWindowHeader">
-    <mat-card-title>
-      New question
-    </mat-card-title>
-    <mat-card-subtitle><hr></mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
+  <mat-card class="formWindow">
+    <mat-card-header class="formWindowHeader">
+      <mat-card-title>
+        New question
+      </mat-card-title>
+      <mat-card-subtitle><hr></mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
 
     
       <div class="example-container">
@@ -19,29 +20,45 @@
     
         <mat-form-field>
           <mat-label>Discription</mat-label>
-          <textarea matInput maxlength="1000" (ngModel)="description" name="description" placeholder="Descripton" required></textarea>
+          <textarea matInput rows="15" cols="33" maxlength="3000" (ngModel)="description" name="description" placeholder="Descripton" required></textarea>
         </mat-form-field>
         <div class="tags">
-          <div class="tagsLabel"><p>tags: </p></div>
-          <div class="checkboxes">
-            <p>
-              <mat-checkbox (ngModel)="tag1" name="tag1">tag1</mat-checkbox>
-            </p>
-            <p>
-              <mat-checkbox (ngModel)="tag2" name="tag2">tag2</mat-checkbox>
-            </p>
-            <p>
-              <mat-checkbox (ngModel)="tag3" name="tag3">tag3</mat-checkbox>
-            </p>
-          </div>
+          <mat-form-field class="example-chip-list">
+
+            <mat-chip-list #chipList>
+              <mat-chip
+                *ngFor="let tag of tags"
+                selectable="true"
+                removable="true"
+                (removed)="remove(tag)">
+                {{tag}}
+                <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+              </mat-chip>
+
+              <input
+                placeholder="Tags..."
+                #tagInput
+                [formControl]="tagCtrl"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                matChipInputAddOnBlur="true"
+                (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                {{tag}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
       </div>
     
 
-  </mat-card-content>
-  <mat-card-actions class="cardActions">
-    <button mat-raised-button type="submit" routerLink="" [disabled]="!formData.valid" color="primary">OK</button>
-    <button mat-raised-button color="warn">Cancel</button>
-  </mat-card-actions>
-</mat-card>
+    </mat-card-content>
+    <mat-card-actions class="cardActions">
+      <button mat-raised-button type="submit" [disabled]="!formData.valid" color="primary">OK</button>
+      <button mat-raised-button color="warn">Cancel</button>
+    </mat-card-actions>
+  </mat-card>
 </form>

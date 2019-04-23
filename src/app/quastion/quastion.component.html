@@ -65,7 +65,7 @@
                                                       <!-- comment.id !== quastion.answerID -->
         </div>
       </mat-card-content>
-      <button *ngIf="comment.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button color="primary">Edit</button>
+    <!--  <button *ngIf="comment.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button color="primary">Edit</button> -->
       <button *ngIf="comment.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button (click)="deleteComment(comment.id)" color="warn">Delete</button>
     </mat-card>
     <!---->

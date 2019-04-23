@@ -1,7 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { User } from 'firebase/app';
+
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { QuationsService } from '../quations.service';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
+import { startWith, map } from 'rxjs/operators';
 
 
 @Component({
@@ -13,19 +19,87 @@ export class CreatequastionComponent implements OnInit {
   user: User;
   quations: any;
 
-  constructor(private authService: AuthService, private dbServise: QuationsService) { 
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  tagCtrl = new FormControl();
+  filteredTags: Observable<string[]>;
+  tags: string[] = [];
+  allTags: string[] = [];
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+  constructor(private authService: AuthService, private dbServise: QuationsService) {
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+      startWith(null),
+      map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice())
+    );
+
+    dbServise.getTagsValuesChanges().subscribe( (tags) => {
+      this.allTags = tags;
+    });
+
     authService.getUser().subscribe( user => {
       this.user = user;
     });
   }
 
+
+  add(event: MatChipInputEvent): void {
+    // Add fruit only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+
+      // Add our fruit
+      if ((value || '').trim()) {
+        this.tags.push(value.trim());
+      }
+
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+
+      this.tagCtrl.setValue(null);
+    }
+  }
+
+  remove(fruit: string): void {
+    const index = this.tags.indexOf(fruit);
+
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.tags.push(event.option.viewValue);
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
   onSubmit(formData: any) {
     const now = new Date();
 
-    const tagsArray: string[] = [];
-    if (formData.value.tag1) { tagsArray.push('tag1'); }
-    if (formData.value.tag2) { tagsArray.push('tag2'); }
-    if (formData.value.tag3) { tagsArray.push('tag3'); }
+    this.dbServise.pushTags(this.tags);
 
     this.dbServise.sendQuastion({
       id: 0,
@@ -33,7 +107,7 @@ export class CreatequastionComponent implements OnInit {
       description: formData.value.description,
       author: this.user.uid,
       approved: false,
-      tags: tagsArray, // add tags
+      tags: this.tags, // add tags
       dateOfCreation: +now,
       answerID: 0,
     });

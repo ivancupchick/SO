@@ -33,16 +33,14 @@ hr {
   line-height: 0.1em;
 }
 
-
-
-.tagsLabel {
-  margin: 10px;
-  width: 40px;
-}
 .tags {
   display: flex;
   justify-content: flex-start;
 }
 .checkboxes {
   margin: 10px;
+}
+
+.example-chip-list {
+  width: 100%;
 }

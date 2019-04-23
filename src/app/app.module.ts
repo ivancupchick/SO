@@ -13,7 +13,7 @@ import { LoginComponent } from './header/login/login.component';
 import { SignupComponent } from './header/signup/signup.component';
 import { ProfileComponent } from './profile/profile.component';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routes } from './app.routes';
 
@@ -37,7 +37,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -57,8 +58,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     FormsModule,
+    ReactiveFormsModule,
     routes,
     [BrowserAnimationsModule],
+
+
     MatToolbarModule,
     MatButtonModule,
     MatMenuModule,
@@ -74,6 +78,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatSidenavModule,
     MatCheckboxModule,
     MatButtonToggleModule,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

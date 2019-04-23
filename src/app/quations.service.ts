@@ -14,9 +14,13 @@ export class QuationsService {
   linkQuastions: AngularFireList<Quastion>;
   quastionNextNumber: number;
 
+  tags: string[];
+  linkTags: AngularFireList<string>;
+
   constructor(public db: AngularFireDatabase) {
     this.linkQuastions = db.list('quastions');
     this.linkComments = db.list('comments');
+    this.linkTags = db.list('tags');
     const linkCommentsNextNumber = db.object('commentNextNumber');
     const linkQuastionNextNumber = db.object('quastionNextNumber');
 
@@ -37,6 +41,10 @@ export class QuationsService {
 
     this.linkComments.valueChanges().subscribe( (comments: Comment[]) => {
       this.comments = comments;
+    });
+
+    this.linkTags.valueChanges().subscribe( (tags: string[]) => {
+      this.tags = tags;
     });
   }
 
@@ -65,8 +73,36 @@ export class QuationsService {
     return this.linkComments.valueChanges();
   }
 
+  getTagsValuesChanges() {
+    return this.linkTags.valueChanges();
+  }
+
   getComments() {
     return this.comments;
+  }
+
+  pushTags(tags: string[]) {
+    let alreadyExistTags: string[];
+    this.tags.forEach((tagFromDB: string) => {
+      tags.forEach( (tagFromCommit: string) => {
+        if (tagFromDB === tagFromCommit) {
+          alreadyExistTags.push(tagFromDB);
+        }
+      });
+    });
+    tags = tags.filter( (tag) => {
+      if (alreadyExistTags) {
+        alreadyExistTags.forEach( (tagForRemove) => {
+          if (tag === tagForRemove) {
+            return false;
+          }
+        });
+      }
+      return true;
+    });
+    tags.forEach(tag => {
+      this.linkTags.push(tag);
+    });
   }
 
   approveQuastion(id: number) {
