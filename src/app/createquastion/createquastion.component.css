@@ -33,10 +33,6 @@ hr {
   line-height: 0.1em;
 }
 
-.tags {
-  display: flex;
-  justify-content: flex-start;
-}
 .checkboxes {
   margin: 10px;
 }

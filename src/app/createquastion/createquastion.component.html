@@ -22,39 +22,37 @@
           <mat-label>Discription</mat-label>
           <textarea matInput rows="15" cols="33" maxlength="3000" (ngModel)="description" name="description" placeholder="Descripton" required></textarea>
         </mat-form-field>
-        <div class="tags">
-          <mat-form-field class="example-chip-list">
 
-            <mat-chip-list #chipList>
-              <mat-chip
-                *ngFor="let tag of tags"
-                selectable="true"
-                removable="true"
-                (removed)="remove(tag)">
-                {{tag}}
-                <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
-              </mat-chip>
+        <mat-form-field class="example-chip-list">
+          <mat-chip-list #chipList>
+            <mat-chip
+              *ngFor="let tag of tags"
+              selectable="true"
+              removable="true"
+              (removed)="remove(tag)">
+              {{tag}}
+              <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+            </mat-chip>
 
-              <input
-                placeholder="Tags..."
-                #tagInput
-                [formControl]="tagCtrl"
-                [matAutocomplete]="auto"
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                matChipInputAddOnBlur="true"
-                (matChipInputTokenEnd)="add($event)">
-            </mat-chip-list>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-              <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
-                {{tag}}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
+            <input
+              placeholder="Tags..."
+              #tagInput
+              [formControl]="tagCtrl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              matChipInputAddOnBlur="true"
+              (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+              {{tag}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
       </div>
     
-
     </mat-card-content>
     <mat-card-actions class="cardActions">
       <button mat-raised-button type="submit" [disabled]="!formData.valid" color="primary">OK</button>

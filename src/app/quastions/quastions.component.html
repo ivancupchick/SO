@@ -2,6 +2,69 @@
   <mat-toolbar style="margin-top:5px;" color="primary">
   <mat-toolbar-row style="display:flex; justify-content: space-between;">
   -->
+<mat-toolbar-row style="display:flex; justify-content:space-between">
+  <div>
+    <mat-form-field>
+      <mat-label>Is answered</mat-label>
+      <mat-select [(value)]="isAnswered">
+        <mat-option value="none">
+          All
+        </mat-option>
+        <mat-option value="isAnswered">
+          Is answered
+        </mat-option>
+        <mat-option value="isNotAnswered">
+          Is not answered
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>In a period</mat-label>
+      <mat-select>
+        <mat-option (click)="setPeriod(0)" value="none">
+          None
+        </mat-option>
+        <mat-option (click)="setPeriod(1)" value="none">
+          In a day
+        </mat-option>
+        <mat-option (click)="setPeriod(7)" value="none">
+          In s week
+        </mat-option>
+        <mat-option (click)="setPeriod(30)" value="none">
+          In a month
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- reWrite to fropdown -->
+    <!--
+    <mat-button-toggle-group multiple name="fontStyle" aria-label="Font Style">
+      <mat-button-toggle (click)="setPeriod(1)" value="day">In a day</mat-button-toggle>
+      <mat-button-toggle (click)="setPeriod(7)" value="week">In a week</mat-button-toggle>
+      <mat-button-toggle (click)="setPeriod(30)" value="month">In a month</mat-button-toggle>
+    </mat-button-toggle-group>
+    -->
+    <span> </span>
+    <mat-button-toggle-group multiple name="fontStyle" aria-label="Font Style">
+      <mat-button-toggle (click)="sort()">Sort</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle (click)="setTiles()" value="tiles">
+      <mat-icon>view_module</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle (click)="setLines()" value="line">
+        <mat-icon>view_stream</mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+</mat-toolbar-row>
+
+
 <mat-accordion>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
@@ -14,29 +77,21 @@
     </mat-expansion-panel-header>
     <div style="display:flex; justify-content: space-between; align-items: center;">
       <div style="display: flex; flex-direction:column;" (mouseup)="filter()">
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="isAnswered">Is answered</mat-checkbox>
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="isNotAnsweres">Is not answered</mat-checkbox>
         <mat-checkbox style="margin: 4px;" [(ngModel)]="onModeration" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'">On moderation</mat-checkbox>
         <mat-checkbox style="margin: 4px;" [(ngModel)]="myQuestions">Only my questions</mat-checkbox>
+
         <mat-checkbox style="margin: 4px;" [(ngModel)]="tag1">Tag1</mat-checkbox>
         <mat-checkbox style="margin: 4px;" [(ngModel)]="tag2">Tag2</mat-checkbox>
         <mat-checkbox style="margin: 4px;" [(ngModel)]="tag3">Tag3</mat-checkbox>
+
         <div>
-          <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle (click)="setPeriod(1)" value="day">In a day</mat-button-toggle>
-            <mat-button-toggle (click)="setPeriod(7)" value="week">In a week</mat-button-toggle>
-            <mat-button-toggle (click)="setPeriod(30)" value="month">In a month</mat-button-toggle>
-          </mat-button-toggle-group>
+          
         </div>
       </div>
       <div>
-        <button mat-raised-button (click)="sort()">Sort</button>
       </div>
       <div>
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-          <mat-button-toggle (click)="setTiles()" value="tiles">Tiles</mat-button-toggle>
-          <mat-button-toggle (click)="setLines()" value="lines">Lines</mat-button-toggle>
-        </mat-button-toggle-group>
+        
       </div>
     </div>
   </mat-expansion-panel>
@@ -66,14 +121,17 @@
           <div class="free"> </div>
 
           <div class="questionTags">
-            {{formatTags(question.tags)}}
+            <div *ngIf="question.tags[0] !== undefined">
+              <a (click)="linkToTag(question.tags[0])" >{{question.tags[0]}}</a> <span *ngFor=" let tag of question.tags.slice(1)"> | <a (click)="linkToTag(tag);" >{{tag}}</a></span>
+            </div> 
+            <!-- {{formatTags(question.tags)}} -->
           </div>
         </div>
       </mat-card-content>
     
       <mat-card-footer>
         <button color="primary" routerLink="/quastion/{{question.id}}" mat-raised-button>Answer</button>
-        <button color="primary" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="approveQuestion(question.id)" mat-raised-button>Approve</button>
+        <button color="primary" *ngIf="!question.approved && (userInfo?.role == 'Admin' || userInfo?.role == 'Moderator')" (click)="approveQuestion(question.id)" mat-raised-button>Approve</button>
         <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'" (click)="deleteQuestion(question.id)" mat-raised-button>Delete</button>      
       </mat-card-footer>
 

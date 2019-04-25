@@ -39,6 +39,7 @@ import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatButtonToggleModule,
     MatChipsModule,
     MatAutocompleteModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

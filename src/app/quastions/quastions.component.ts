@@ -18,8 +18,11 @@ export class QuastionsComponent implements OnInit {
   setting = true;
   isSorted = false;
 
+  tags: string[];
+
   // filters
-  isAnswered = false;
+
+  isAnswered: string;
   isNotAnsweres = false;
   onModeration = false;
   myQuestions = false;
@@ -30,6 +33,10 @@ export class QuastionsComponent implements OnInit {
   dateFrom: Date;
 
   constructor(private dbService: QuationsService, private router: Router, private authService: AuthService) {
+    this.dbService.getTagsValuesChanges().subscribe( (tags: string[]) => {
+      this.tags = tags;
+    });
+
     this.dbService.getQuastionsValuesChanges().subscribe(response => {
       this.displayQuestions = response;
       this.questions = response;
@@ -63,19 +70,8 @@ export class QuastionsComponent implements OnInit {
     this.dbService.approveQuastion(id);
   }
 
-  formatTags(tagsArray: string[]) {
-    if (tagsArray.length === 0) {
-      return '';
-    }
-    let result: string = '' + tagsArray[0];
-    tagsArray.forEach( (element: string, i: number) => {
-      if (i !== 0) {
-        if (element) {
-          result += ` | ${element}`;
-        }
-      }
-    });
-    return result ;
+  linkToTag(tag: string) {
+    console.log('link to ' + tag);
   }
 
   deleteQuestion(id: number) {
@@ -122,7 +118,7 @@ export class QuastionsComponent implements OnInit {
   filters() {
     this.displayQuestions = [...this.questions];
     try {
-      if (this.isAnswered) {
+      if (this.isAnswered === 'isAnswered') {
         this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
           if (question.answerID !== 0) {
             return true;
@@ -130,7 +126,7 @@ export class QuastionsComponent implements OnInit {
           return false;
         });
       }
-      if (this.isNotAnsweres) {
+      if (this.isAnswered === 'isNotAnswered') {
         this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
           if (question.answerID === 0) {
             return true;
@@ -199,33 +195,18 @@ export class QuastionsComponent implements OnInit {
     } catch {
       alert('You didn\'t logged'); // error message
     }
-    
   }
 
   setPeriod(value: number) {
     let dateFrom = new Date();
-
-    if (!this.isFilterDate) {
+    if (value === 0) {
+      this.isFilterDate = false;
+      this.filters();
+    } else {
       this.isFilterDate = true;
       dateFrom.setDate(dateFrom.getDate() - value);
       this.dateFrom = dateFrom;
       this.filters();
-    } else {
-      let beforeDate = new Date();
-      beforeDate.setDate(beforeDate.getDate() - value - 1);
-      let afterDate = new Date();
-      afterDate.setDate(beforeDate.getDate() + 2);
-
-      if (this.dateFrom > beforeDate && this.dateFrom < afterDate) {
-        this.isFilterDate = false;
-        this.dateFrom = new Date();
-        this.filters();
-      } else {
-        this.isFilterDate = true;
-        dateFrom.setDate(dateFrom.getDate() - value);
-        this.dateFrom = dateFrom;
-        this.filters();
-      }
     }
   }
 }
