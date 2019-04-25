@@ -142,6 +142,10 @@
   margin: 0 5px;
 }
 
+mat-form-field {
+  width: 120px;
+}
+
 
 
 

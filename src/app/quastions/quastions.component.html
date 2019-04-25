@@ -2,27 +2,38 @@
   <mat-toolbar style="margin-top:5px;" color="primary">
   <mat-toolbar-row style="display:flex; justify-content: space-between;">
   -->
-<mat-toolbar-row style="display:flex; justify-content:space-between">
-  <div>
+<div style="width: 100; padding: 5px;flex-wrap: wrap;margin-top:5px; display:flex; justify-content:space-between">
+  <div (click)="filter()">
     <mat-form-field>
       <mat-label>Is answered</mat-label>
       <mat-select [(value)]="isAnswered">
-        <mat-option value="none">
+        <mat-option (click)="filter()" value="none">
           All
         </mat-option>
-        <mat-option value="isAnswered">
+        <mat-option (click)="filter()" value="isAnswered">
           Is answered
         </mat-option>
-        <mat-option value="isNotAnswered">
+        <mat-option (click)="filter()" value="isNotAnswered">
           Is not answered
         </mat-option>
       </mat-select>
     </mat-form-field>
 
+    <mat-checkbox style="margin: 4px;" [(ngModel)]="onModeration" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'">On moderation</mat-checkbox>
+    <mat-checkbox style="margin: 4px;" [(ngModel)]="myQuestions">Only my questions</mat-checkbox>
   </div>
 
   <div>
     <mat-form-field>
+      <mat-label>Tags</mat-label>
+      <mat-select multiple [(ngModel)]="tagsSelected">
+        <mat-option *ngFor="let tag of allTags" (click)="filter()" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="margin-left: 8px;">
       <mat-label>In a period</mat-label>
       <mat-select>
         <mat-option (click)="setPeriod(0)" value="none">
@@ -39,65 +50,22 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <!-- reWrite to fropdown -->
-    <!--
-    <mat-button-toggle-group multiple name="fontStyle" aria-label="Font Style">
-      <mat-button-toggle (click)="setPeriod(1)" value="day">In a day</mat-button-toggle>
-      <mat-button-toggle (click)="setPeriod(7)" value="week">In a week</mat-button-toggle>
-      <mat-button-toggle (click)="setPeriod(30)" value="month">In a month</mat-button-toggle>
-    </mat-button-toggle-group>
-    -->
-    <span> </span>
-    <mat-button-toggle-group multiple name="fontStyle" aria-label="Font Style">
+  </div>
+  <div>
+    <mat-button-toggle-group style="margin-right: 8px;" multiple name="fontStyle" aria-label="Font Style">
       <mat-button-toggle (click)="sort()">Sort</mat-button-toggle>
     </mat-button-toggle-group>
+
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle (click)="setTiles()" value="tiles">
+          <mat-icon>view_module</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle (click)="setLines()" value="line">
+            <mat-icon>view_stream</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
   </div>
-
-  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-    <mat-button-toggle (click)="setTiles()" value="tiles">
-      <mat-icon>view_module</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle (click)="setLines()" value="line">
-        <mat-icon>view_stream</mat-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
-
-</mat-toolbar-row>
-
-
-<mat-accordion>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Filters
-      </mat-panel-title>
-      <mat-panel-description>
-        Sort and Setting
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div style="display:flex; justify-content: space-between; align-items: center;">
-      <div style="display: flex; flex-direction:column;" (mouseup)="filter()">
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="onModeration" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator'">On moderation</mat-checkbox>
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="myQuestions">Only my questions</mat-checkbox>
-
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="tag1">Tag1</mat-checkbox>
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="tag2">Tag2</mat-checkbox>
-        <mat-checkbox style="margin: 4px;" [(ngModel)]="tag3">Tag3</mat-checkbox>
-
-        <div>
-          
-        </div>
-      </div>
-      <div>
-      </div>
-      <div>
-        
-      </div>
-    </div>
-  </mat-expansion-panel>
-</mat-accordion>
-
-
+</div>
 
 <div [class.tiles]="setting" [class.lines]="!setting">
   <div *ngFor="let question of displayQuestions">

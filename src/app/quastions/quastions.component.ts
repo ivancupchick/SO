@@ -3,6 +3,7 @@ import { QuationsService } from '../quations.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { UserInfo, Quastion } from '../mainClasses';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-quastions',
@@ -10,6 +11,8 @@ import { UserInfo, Quastion } from '../mainClasses';
   styleUrls: ['./quastions.component.css']
 })
 export class QuastionsComponent implements OnInit {
+  tagsSelected: string[];
+  allTags: string[];
 
   questions: Quastion[];
   displayQuestions: Quastion[];
@@ -18,23 +21,17 @@ export class QuastionsComponent implements OnInit {
   setting = true;
   isSorted = false;
 
-  tags: string[];
 
   // filters
-
   isAnswered: string;
-  isNotAnsweres = false;
   onModeration = false;
   myQuestions = false;
-  tag1 = false;
-  tag2 = false;
-  tag3 = false;
   isFilterDate = false;
   dateFrom: Date;
 
   constructor(private dbService: QuationsService, private router: Router, private authService: AuthService) {
     this.dbService.getTagsValuesChanges().subscribe( (tags: string[]) => {
-      this.tags = tags;
+      this.allTags = tags;
     });
 
     this.dbService.getQuastionsValuesChanges().subscribe(response => {
@@ -116,6 +113,10 @@ export class QuastionsComponent implements OnInit {
   }
 
   filters() {
+    console.log(this.tagsSelected);
+    console.log(this.allTags);
+
+
     this.displayQuestions = [...this.questions];
     try {
       if (this.isAnswered === 'isAnswered') {
@@ -150,39 +151,17 @@ export class QuastionsComponent implements OnInit {
           return false;
         });
       }
-      if (this.tag1) {
+      this.tagsSelected.forEach( (tag) => {
         this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
           let result = false;
           question.tags.forEach(element => {
-            if (element === 'tag1') {
+            if (element === tag) {
               result = true;
             }
           });
           return result;
         });
-      }
-      if (this.tag2) {
-        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          let result = false;
-          question.tags.forEach(element => {
-            if (element === 'tag2') {
-              result = true;
-            }
-          });
-          return result;
-        });
-      }
-      if (this.tag3) {
-        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          let result = false;
-          question.tags.forEach(element => {
-            if (element === 'tag3') {
-              result = true;
-            }
-          });
-          return result;
-        });
-      }
+      });
       if (this.isFilterDate) {
         this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
           const dateOfCreation = new Date(question.dateOfCreation);
