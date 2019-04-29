@@ -14,11 +14,11 @@ export class Quastion {
       public approved: boolean = false,
       public id: number = 0,
       public title: string,
-      public tags: string[],
       public description: string,
       public author: string,
       public dateOfCreation: number,
       public answerID: number,
+      public tags?: string[],
     ) { }
 }
 

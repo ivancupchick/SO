@@ -12,6 +12,11 @@ import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './header/login/login.component';
 import { SignupComponent } from './header/signup/signup.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AuthGuard } from './auth.guard';
+import { CreatequastionComponent } from './createquastion/createquastion.component';
+import { QuastionsComponent } from './quastions/quastions.component';
+import { QuastionComponent } from './quastion/quastion.component';
+import { EditQuestionComponent } from './edit-question/edit-question.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -28,14 +33,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { CreatequastionComponent } from './createquastion/createquastion.component';
-import { QuastionsComponent } from './quastions/quastions.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { QuastionComponent } from './quastion/quastion.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';

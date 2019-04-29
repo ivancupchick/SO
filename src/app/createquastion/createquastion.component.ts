@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { startWith, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class CreatequastionComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor(private authService: AuthService, private dbServise: QuationsService) {
+  constructor(private authService: AuthService, private dbServise: QuationsService, private router: Router) {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice())
@@ -85,21 +86,11 @@ export class CreatequastionComponent implements OnInit {
     return this.allTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
   }
 
-
-
-
-
-
-
-
-
-
-
-
   onSubmit(formData: any) {
     const now = new Date();
+    const tagsForSend = Array.from(new Set(this.tags));
 
-    this.dbServise.pushTags(this.tags);
+    this.dbServise.pushTags(tagsForSend);
 
     this.dbServise.sendQuastion({
       id: 0,
@@ -107,12 +98,12 @@ export class CreatequastionComponent implements OnInit {
       description: formData.value.description,
       author: this.user.uid,
       approved: false,
-      tags: this.tags, // add tags
+      tags: tagsForSend, // add tags
       dateOfCreation: +now,
       answerID: 0,
     });
+    this.router.navigateByUrl('');
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 }

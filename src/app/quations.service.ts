@@ -82,7 +82,8 @@ export class QuationsService {
   }
 
   pushTags(tags: string[]) {
-    let alreadyExistTags: string[];
+
+    const alreadyExistTags: string[] = [];
     this.tags.forEach((tagFromDB: string) => {
       tags.forEach( (tagFromCommit: string) => {
         if (tagFromDB === tagFromCommit) {
@@ -90,19 +91,24 @@ export class QuationsService {
         }
       });
     });
-    tags = tags.filter( (tag) => {
+    tags.filter( (tag) => {
+      let result = true;
       if (alreadyExistTags) {
         alreadyExistTags.forEach( (tagForRemove) => {
           if (tag === tagForRemove) {
-            return false;
+            result = false;
           }
         });
       }
-      return true;
+      return result;
     });
+    console.log(alreadyExistTags);
+    console.log(tags);
+    /*
     tags.forEach(tag => {
       this.linkTags.push(tag);
     });
+    */
   }
 
   approveQuastion(id: number) {

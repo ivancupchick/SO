@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'second';
 
   constructor(public afAuth: AngularFireAuth) { }
-  
+
   login() {
     this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
   }

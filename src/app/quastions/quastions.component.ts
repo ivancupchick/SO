@@ -3,7 +3,6 @@ import { QuationsService } from '../quations.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { UserInfo, Quastion } from '../mainClasses';
-import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-quastions',
@@ -11,8 +10,8 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./quastions.component.css']
 })
 export class QuastionsComponent implements OnInit {
-  tagsSelected: string[];
-  allTags: string[];
+  tagsSelected: string[] = [];
+  allTags: string[] = [];
 
   questions: Quastion[];
   displayQuestions: Quastion[];
@@ -23,7 +22,7 @@ export class QuastionsComponent implements OnInit {
 
 
   // filters
-  isAnswered: string;
+  isAnswered: string = 'none';
   onModeration = false;
   myQuestions = false;
   isFilterDate = false;
@@ -35,6 +34,11 @@ export class QuastionsComponent implements OnInit {
     });
 
     this.dbService.getQuastionsValuesChanges().subscribe(response => {
+      response.map((question: Quastion) => {
+        if (!question.tags) {
+          question.tags = [];
+        }
+      });
       this.displayQuestions = response;
       this.questions = response;
     });
@@ -68,7 +72,9 @@ export class QuastionsComponent implements OnInit {
   }
 
   linkToTag(tag: string) {
-    console.log('link to ' + tag);
+    this.tagsSelected.push(tag);
+    this.tagsSelected = this.tagsSelected.concat([])
+    this.filters();
   }
 
   deleteQuestion(id: number) {
@@ -113,53 +119,23 @@ export class QuastionsComponent implements OnInit {
   }
 
   filters() {
-    console.log(this.tagsSelected);
-    console.log(this.allTags);
-
-
     this.displayQuestions = [...this.questions];
     try {
       if (this.isAnswered === 'isAnswered') {
-        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          if (question.answerID !== 0) {
-            return true;
-          }
-          return false;
-        });
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => question.answerID !== 0);
       }
       if (this.isAnswered === 'isNotAnswered') {
-        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          if (question.answerID === 0) {
-            return true;
-          }
-          return false;
-        });
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => question.answerID === 0);
       }
       if (this.onModeration) {
-        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          if (question.approved === false) {
-            return true;
-          }
-          return false;
-        });
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => question.approved === false);
       }
       if (this.myQuestions) {
-        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          if (question.author === this.userInfo.uid) {
-            return true;
-          }
-          return false;
-        });
+        this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => question.author === this.userInfo.uid);
       }
       this.tagsSelected.forEach( (tag) => {
         this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => {
-          let result = false;
-          question.tags.forEach(element => {
-            if (element === tag) {
-              result = true;
-            }
-          });
-          return result;
+          return question.tags.some(element => element === tag);
         });
       });
       if (this.isFilterDate) {

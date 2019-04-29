@@ -14,13 +14,13 @@
 
         <mat-form-field>
           <mat-label>Title</mat-label>
-          <input matInput (ngModel)="title" name="title" placeholder="Title" required>
+          <input matInput (ngModel)="title" name="title" placeholder="Title" pattern=".*\S.*" required>
           <mat-hint></mat-hint>
         </mat-form-field>
     
         <mat-form-field>
           <mat-label>Discription</mat-label>
-          <textarea matInput rows="15" cols="33" maxlength="3000" (ngModel)="description" name="description" placeholder="Descripton" required></textarea>
+          <textarea matInput rows="15" cols="33" maxlength="3000" (ngModel)="description" name="description" placeholder="Descripton" pattern=".*\S.*" required></textarea>
         </mat-form-field>
 
         <mat-form-field class="example-chip-list">
@@ -50,13 +50,12 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-
       </div>
     
     </mat-card-content>
     <mat-card-actions class="cardActions">
       <button mat-raised-button type="submit" [disabled]="!formData.valid" color="primary">OK</button>
-      <button mat-raised-button color="warn">Cancel</button>
+      <button mat-raised-button routerLink="" color="warn">Cancel</button>
     </mat-card-actions>
   </mat-card>
 </form>
