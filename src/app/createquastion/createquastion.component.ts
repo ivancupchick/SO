@@ -35,7 +35,7 @@ export class CreatequastionComponent implements OnInit {
       map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice())
     );
 
-    dbServise.getTagsValuesChanges().subscribe( (tags) => {
+    dbServise.getTagsValuesChanges().subscribe( (tags: string[]) => {
       this.allTags = tags;
     });
 

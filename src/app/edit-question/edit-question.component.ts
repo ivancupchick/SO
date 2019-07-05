@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { QuationsService } from '../quations.service';
+import { Quastion } from '../mainClasses';
 
 @Component({
   selector: 'app-edit-question',
@@ -25,7 +26,7 @@ export class EditQuestionComponent implements OnInit {
     });
 
     dbServise.getQuastionsValuesChanges().subscribe( response => {
-      response.forEach(question => {
+      response.forEach( (question: Quastion) => {
         if (question.id === +this.questionId) {
           console.log(question);
           this.question = question;

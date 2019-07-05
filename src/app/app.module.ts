@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -63,6 +64,7 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     routes,
     [BrowserAnimationsModule],
+    RouterModule,
 
 
     MatToolbarModule,
@@ -84,7 +86,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatAutocompleteModule,
     MatSelectModule,
   ],
-  providers: [],
+  providers: [ ],
   bootstrap: [AppComponent],
   entryComponents: [ LoginComponent, SignupComponent ]
 })

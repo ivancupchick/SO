@@ -28,7 +28,7 @@ export class QuastionComponent implements OnInit {
     this.userInfo = this.authService.getCurrentUserInfo();
 
     dbServise.getQuastionsValuesChanges().subscribe( response => {
-      response.forEach(quastion => {
+      response.forEach( (quastion: Quastion) => {
         if (quastion.id === +this.quastionId) {
           this.quastion = quastion;
         }
@@ -40,7 +40,7 @@ export class QuastionComponent implements OnInit {
     });
 
     this.dbServise.getCommentsValuesChanges().subscribe(response => {
-      response.forEach(comment => {
+      response.forEach( (comment: Comment) => {
         console.log(comment);
         if (comment.quastionId === this.quastionId) {
           this.comments[this.comments.length] = comment;

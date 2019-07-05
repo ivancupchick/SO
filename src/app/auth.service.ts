@@ -4,6 +4,7 @@ import { AngularFireAuth} from '@angular/fire/auth';
 import { User, auth } from 'firebase/app';
 
 import { Observable, from, of } from 'rxjs';
+
 import { UserInfo } from './mainClasses';
 
 @Injectable({
@@ -18,7 +19,7 @@ export class AuthService {
   userInfo: UserInfo;
   usersLength: number;
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase) {
+  constructor(private afAuth: AngularFireAuth, public db: AngularFireDatabase) {
     this.linkUsers = db.list('users');
     this.user = afAuth.authState;
 
@@ -40,7 +41,7 @@ export class AuthService {
     });
     if (count) {
       console.log('User sending to db...'); // delete this line
-      this.linkUsers.push({
+      this.db.list('users').push({
         uid: credential.user.uid,
         id: this.usersLength,
         role: 'User',
@@ -51,12 +52,8 @@ export class AuthService {
     }
   }
 
-  deleteUser(): Observable<any> {
-    return from(this.afAuth.auth.currentUser.delete()); // not work
-  }
-
   getUser(): any {
-    return this.user;
+    return this.afAuth.authState;
   }
 
   loginWithEmail(email: string, password: string): Observable<any> {
@@ -98,17 +95,29 @@ export class AuthService {
   }
 
   receiveUserInfo(): UserInfo {
-    this.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
-      this.users = users;
-      this.usersLength = users.length + 1;
+    const returnUserInfo = (uid: string) => {
+      this.db.list('users').valueChanges().subscribe( (users: UserInfo[]) => {
+        this.users = users;
+        this.usersLength = users.length + 1;
 
-      users.forEach(( userInfomation: UserInfo) => {
-        if (this.userId === userInfomation.uid) {
-          this.userInfo = userInfomation;
-          return userInfomation;
+        users.forEach(( userInfomation: UserInfo) => {
+          if (uid === userInfomation.uid) {
+            this.userInfo = userInfomation;
+            return userInfomation;
+          }
+        });
+      });
+    };
+
+    if (this.afAuth.authState) {
+      this.afAuth.authState
+        .subscribe( (user) => {
+        if (user) {
+          returnUserInfo(user.uid);
         }
       });
-    });
+    }
+
     return this.userInfo;
   }
 
@@ -129,5 +138,9 @@ export class AuthService {
 
   get currentUserObservable(): Observable<User> {
     return this.afAuth.authState;
+  }
+
+  getUsersValueChanges() {
+    return this.db.list('users').valueChanges();
   }
 }

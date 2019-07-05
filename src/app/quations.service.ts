@@ -1,63 +1,59 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireAction, DatabaseSnapshot } from '@angular/fire/database';
 import { Comment, Quastion, LengthNumber } from './mainClasses';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class QuationsService {
   comments: Comment[];
-  linkComments: AngularFireList<Comment>;
   commentNextNumber: number;
 
   quastions: Quastion[];
-  linkQuastions: AngularFireList<Quastion>;
   quastionNextNumber: number;
 
   tags: string[];
-  linkTags: AngularFireList<string>;
 
   constructor(public db: AngularFireDatabase) {
-    this.linkQuastions = db.list('quastions');
-    this.linkComments = db.list('comments');
-    this.linkTags = db.list('tags');
-    const linkCommentsNextNumber = db.object('commentNextNumber');
-    const linkQuastionNextNumber = db.object('quastionNextNumber');
+    setTimeout( () => {
+      this.db.list<Quastion>('quastions').valueChanges().subscribe( (quastions: Quastion[]) => {
+        this.quastions = quastions;
+      });
 
-    linkCommentsNextNumber.valueChanges().subscribe( (response: LengthNumber) => {
-      console.log(response.value);
-      this.commentNextNumber = response.value;
-    });
+      this.db.list('comments').valueChanges().subscribe( (comments: Comment[]) => {
+        this.comments = comments;
+      });
 
-    linkQuastionNextNumber.valueChanges().subscribe( (response: LengthNumber) => {
-      console.log(response.value);
-      this.quastionNextNumber = response.value;
-    });
-
-
-    this.linkQuastions.valueChanges().subscribe( (quastions: Quastion[]) => {
-      this.quastions = quastions;
-    });
-
-    this.linkComments.valueChanges().subscribe( (comments: Comment[]) => {
-      this.comments = comments;
-    });
-
-    this.linkTags.valueChanges().subscribe( (tags: string[]) => {
-      this.tags = tags;
-    });
+      this.db.list('tags').valueChanges().subscribe( (tags: string[]) => {
+        this.tags = tags;
+      });
+    }, 7);
   }
 
   sendQuastion(quastion: Quastion): void {
-    quastion.id = this.quastionNextNumber;
-    this.db.object('quastionNextNumber').set({ value: quastion.id + 1});
-    this.linkQuastions.push(quastion);
+    this.db.object('quastionNextNumber').valueChanges()
+      .pipe(
+        take(1)
+      )
+      .subscribe( (response: LengthNumber) => {
+        quastion.id = response.value;
+        this.db.object('quastionNextNumber').set({ value: quastion.id + 1});
+        this.db.list('quastions').push(quastion);
+      });
   }
 
   sendComment(comment: Comment): void {
-    comment.id = this.commentNextNumber;
-    this.db.object('commentNextNumber').set({ value: comment.id + 1});
-    this.linkComments.push(comment);
+    this.db.object('commentNextNumber').valueChanges()
+      .pipe(
+        take(1)
+      )
+      .subscribe( (response: LengthNumber) => {
+        comment.id = response.value;
+        this.db.object('commentNextNumber').set({ value: comment.id + 1});
+        this.db.list('comments').push(comment);
+      });
   }
 
 
@@ -66,15 +62,15 @@ export class QuationsService {
   }
 
   getQuastionsValuesChanges() {
-    return this.linkQuastions.valueChanges();
+    return this.db.list('quastions').valueChanges();
   }
 
   getCommentsValuesChanges() {
-    return this.linkComments.valueChanges();
+    return this.db.list('comments').valueChanges();
   }
 
   getTagsValuesChanges() {
-    return this.linkTags.valueChanges();
+    return this.db.list('tags').valueChanges();
   }
 
   getComments() {
@@ -106,7 +102,7 @@ export class QuationsService {
     console.log(tags);
     /*
     tags.forEach(tag => {
-      this.linkTags.push(tag);
+      this.db.list('tags').push(tag);
     });
     */
   }
@@ -121,7 +117,7 @@ export class QuationsService {
       });
 
       approvedQuastion.approved = true;
-      this.linkQuastions.update(key, {
+      this.db.list('quastions').update(key, {
         approved: true,
         title: approvedQuastion.title,
         id: approvedQuastion.id,
@@ -133,8 +129,8 @@ export class QuationsService {
       });
     };
 
-    this.linkQuastions.snapshotChanges().forEach( changes => {
-      changes.forEach( response => {
+    this.db.list('quastions').snapshotChanges().forEach( changes => {
+      changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
           if (response.payload.val().id === id)  {
           sendApproveQuestion(response.key);
         }
@@ -151,7 +147,7 @@ export class QuationsService {
         }
       });
 
-      this.linkQuastions.set(key, {
+      this.db.list('quastions').set(key, {
         approved: approvedQuastion.approved,
         title: approvedQuastion.title,
         id: approvedQuastion.id,
@@ -163,8 +159,8 @@ export class QuationsService {
       });
     };
 
-    this.linkQuastions.snapshotChanges().forEach( (changes) => {
-      changes.forEach( response => {
+    this.db.list('quastions').snapshotChanges().forEach( (changes) => {
+      changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
         if (response.payload.val().id === id)  {
           sendApproveQuestion(response.key);
         }
@@ -174,8 +170,8 @@ export class QuationsService {
 
   deleteQuestion(id: number) {
     const removeQuestionComments = (questionId: number) => {
-      this.linkComments.snapshotChanges().forEach( changes => {
-        changes.forEach( response => {
+      this.db.list('comments').snapshotChanges().forEach( changes => {
+        changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Comment>>) => {
           if (response.payload.val().quastionId === questionId) {
             this.deleteComment(response.payload.val().id);
           }
@@ -183,10 +179,10 @@ export class QuationsService {
       });
     };
 
-    this.linkQuastions.snapshotChanges().forEach( changes => {
-      changes.forEach( response => {
+    this.db.list('quastions').snapshotChanges().forEach( changes => {
+      changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
           if (response.payload.val().id === id)  {
-          this.linkQuastions.remove(response.key);
+          this.db.list('quastions').remove(response.key);
           removeQuestionComments(id);
         }
       });
@@ -194,10 +190,10 @@ export class QuationsService {
   }
 
   deleteComment(id: number) {
-    this.linkComments.snapshotChanges().forEach( changes => {
-      changes.forEach( response => {
+    this.db.list('comments').snapshotChanges().forEach( changes => {
+      changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Comment>>) => {
           if (response.payload.val().id === id)  {
-          this.linkComments.remove(response.key);
+          this.db.list('comments').remove(response.key);
         }
       });
     });
@@ -212,11 +208,11 @@ export class QuationsService {
         }
       });
 
-      this.linkQuastions.set(key, questionForSend);
+      this.db.list('quastions').set(key, questionForSend);
     };
     console.log(id, questionForSend);
-    this.linkQuastions.snapshotChanges().forEach( changes => {
-      changes.forEach( response => {
+    this.db.list('quastions').snapshotChanges().forEach( changes => {
+      changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
           if (response.payload.val().id === +id)  {
           sendApproveQuestion(response.key);
         }

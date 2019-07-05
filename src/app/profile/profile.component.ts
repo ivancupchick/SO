@@ -36,12 +36,6 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteUser() {
-    this.authService.deleteUser()
-      .subscribe(() => {
-        console.log('User deleted');
-      }, error => {
-        console.log(error);
-      });
     this.router.navigateByUrl('');
   }
 

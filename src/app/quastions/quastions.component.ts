@@ -33,7 +33,7 @@ export class QuastionsComponent implements OnInit {
       this.allTags = tags;
     });
 
-    this.dbService.getQuastionsValuesChanges().subscribe(response => {
+    this.dbService.getQuastionsValuesChanges().subscribe((response: Quastion[]) => {
       response.map((question: Quastion) => {
         if (!question.tags) {
           question.tags = [];
@@ -43,7 +43,7 @@ export class QuastionsComponent implements OnInit {
       this.questions = response;
     });
 
-    this.authService.linkUsers.valueChanges().subscribe( (users: UserInfo[]) => {
+    this.authService.getUsersValueChanges().subscribe( (users: UserInfo[]) => {
       users.forEach( (userInformation: UserInfo) => {
         if (this.authService.userId === userInformation.uid) {
           this.userInfo = userInformation;
