@@ -1,20 +1,21 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row class="temp">
     <div class="example-button-row">
-      <button routerLink="" mat-raised-button>Home</button>
+      <button routerLink="" mat-raised-button>Домой</button>
+      <button *ngIf="authService.user | async" routerLink="quastion" mat-raised-button color="accent">Новый Вопрос</button>
     </div>
     <span class="example-spacer"></span>
     <ng-template #isNotAuthorized>
       <div class="example-button-row">
-        <button (click)="openLogin();" mat-raised-button>Log in</button>
-        <button (click)="openSignup();" mat-raised-button>Sign up</button>
+        <button (click)="openLogin();" mat-raised-button>Войти</button>
+        <button (click)="openSignup();" mat-raised-button>Зарегистрироваться</button>
       </div>
     </ng-template>
     <div *ngIf="authService.user | async else isNotAuthorized">
-        <button *ngIf="authService.user" routerLink="quastion" mat-raised-button color="accent" >New question</button>
+        <!-- <button *ngIf="authService.user | async" routerLink="quastion" mat-raised-button color="accent" >Новый Вопрос</button> -->
         <button mat-button [matMenuTriggerFor]="menu">{{ (authService.user | async)?.email }}</button>
         <mat-menu #menu="matMenu">
-          <button (click)="linkToProfile()" mat-menu-item>Профиль</button>
+          <!-- <button (click)="linkToProfile()" mat-menu-item>Профиль</button> -->
           <button (click)="logout()" mat-menu-item>Выйти</button>
         </mat-menu>
     </div>
