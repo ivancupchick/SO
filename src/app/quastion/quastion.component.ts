@@ -58,6 +58,7 @@ export class QuastionComponent implements OnInit {
       quastionId: +this.quastionId,
       author: this.user.uid,
       dateOfCreation: +now,
+      deleted: false
     });
   }
 

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { QuationsService } from '../services/quations.service';
-import { Quastion } from '../mainClasses';
+import { Quastion, Comment } from '../mainClasses';
 
 @Component({
   selector: 'app-edit-question',
@@ -12,9 +12,9 @@ import { Quastion } from '../mainClasses';
 })
 export class EditQuestionComponent implements OnInit {
   questionId: number;
-  question: any;
+  question: Quastion;
 
-  comments: any[] = [];
+  comments: Comment[] = [];
 
   title: string;
   description: string;
@@ -50,6 +50,7 @@ export class EditQuestionComponent implements OnInit {
       author: this.question.author,
       dateOfCreation: this.question.dateOfCreation,
       answerID: this.question.answerID,
+      deleted: this.question.deleted
     });
   }
 

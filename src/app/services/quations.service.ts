@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireAction, DatabaseSnapshot } from '@angular/fire/database';
-import { Comment, Quastion, LengthNumber } from '../mainClasses';
+import { Comment, Quastion } from '../mainClasses';
 import { take } from 'rxjs/operators';
 
 @Injectable({
@@ -33,27 +33,15 @@ export class QuationsService {
   }
 
   sendQuastion(quastion: Quastion): void {
-    this.db.object('quastionNextNumber').valueChanges()
-      .pipe(
-        take(1)
-      )
-      .subscribe( (response: LengthNumber) => {
-        quastion.id = response.value;
-        this.db.object('quastionNextNumber').set({ value: quastion.id + 1});
-        this.db.list('quastions').push(quastion);
-      });
+    quastion.id = this.quastions ? this.quastions.length || 0 : 0;
+
+    this.db.list('quastions').push(quastion);
   }
 
   sendComment(comment: Comment): void {
-    this.db.object('commentNextNumber').valueChanges()
-      .pipe(
-        take(1)
-      )
-      .subscribe( (response: LengthNumber) => {
-        comment.id = response.value;
-        this.db.object('commentNextNumber').set({ value: comment.id + 1});
-        this.db.list('comments').push(comment);
-      });
+    comment.id = this.comments ? this.comments.length || 0 : 0;
+
+    this.db.list('comments').push(comment);
   }
 
 
@@ -78,7 +66,6 @@ export class QuationsService {
   }
 
   pushTags(tags: string[]) {
-
     const alreadyExistTags: string[] = [];
     this.tags.forEach((tagFromDB: string) => {
       tags.forEach( (tagFromCommit: string) => {
@@ -100,11 +87,10 @@ export class QuationsService {
     });
     console.log(alreadyExistTags);
     console.log(tags);
-    /*
+
     tags.forEach(tag => {
       this.db.list('tags').push(tag);
     });
-    */
   }
 
   approveQuastion(id: number) {

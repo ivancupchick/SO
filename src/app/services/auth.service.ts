@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth} from '@angular/fire/auth';
 import { User, auth } from 'firebase/app';
 
@@ -14,7 +14,7 @@ export class AuthService {
   user: Observable<User>;
   userId: string;
 
-  linkUsers: any;
+  linkUsers: AngularFireList<UserInfo>;
   users: UserInfo[];
   userInfo: UserInfo;
   usersLength: number;
@@ -22,6 +22,11 @@ export class AuthService {
   constructor(private afAuth: AngularFireAuth, public db: AngularFireDatabase) {
     this.linkUsers = db.list('users');
     this.user = afAuth.authState;
+
+    this.linkUsers.valueChanges()
+      .subscribe(res => {
+        this.users = res;
+      });
 
     this.user.subscribe( (user) => {
       if (user) {
@@ -123,12 +128,17 @@ export class AuthService {
 
   getUserInfoFromDBWithUID(uid: string): UserInfo {
     let userResult: UserInfo;
+
+    if (!this.users) {
+      return ({} as UserInfo);
+    }
+
     this.users.forEach(user => {
       if (user.uid === uid) {
         userResult = user;
       }
     });
-    return userResult;
+    return userResult || ({} as UserInfo);
   }
 
   logOut(): void {

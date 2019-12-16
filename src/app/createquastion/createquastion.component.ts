@@ -101,7 +101,9 @@ export class CreatequastionComponent implements OnInit {
       tags: tagsForSend, // add tags
       dateOfCreation: +now,
       answerID: 0,
+      deleted: false
     });
+
     this.router.navigateByUrl('');
   }
 

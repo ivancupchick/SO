@@ -6,6 +6,7 @@ export class UserInfo {
       public name: string = 'Anonymous',
       public email: string = '',
       public photoUrl: string = 'https://material.angular.io/assets/img/examples/shiba1.jpg',
+      public deleted: boolean = false
     ) { }
 }
 
@@ -19,6 +20,7 @@ export class Quastion {
       public dateOfCreation: number,
       public answerID: number,
       public tags?: string[],
+      public deleted: boolean = false
     ) { }
 }
 
@@ -29,11 +31,6 @@ export class Comment {
     public description: string,
     public author: string,
     public dateOfCreation: number,
-  ) { }
-}
-
-export class LengthNumber {
-  constructor(
-    public value: number,
+    public deleted: boolean = false
   ) { }
 }
