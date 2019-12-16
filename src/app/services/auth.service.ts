@@ -32,7 +32,7 @@ export class AuthService {
     this.userInfo = this.receiveUserInfo();
   }
 
-  private pushUserInfoToDB(credential: auth.UserCredential) { // users: UserInfo[]
+  private pushUserInfoToDB(credential: auth.UserCredential) {
     let count = true;
     this.users.forEach( (user: UserInfo) => {
       if (user.uid === credential.user.uid) {
