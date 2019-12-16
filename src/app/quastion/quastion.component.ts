@@ -16,6 +16,8 @@ export class QuastionComponent implements OnInit {
   user: User;
   userInfo: UserInfo;
 
+  commentDescription;
+
   comments: Comment[] = [];
 
   constructor(private route: ActivatedRoute,
@@ -102,7 +104,7 @@ export class QuastionComponent implements OnInit {
   }
 
   markComment(id: number) {
-    this.dbServise.markAnswer(id, this.quastionId);
+    this.dbServise.markAnswer(this.quastionId, id);
   }
 
   ngOnInit() {

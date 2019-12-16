@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireAction, DatabaseSnapshot } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireAction, DatabaseSnapshot, AngularFireList } from '@angular/fire/database';
 import { Comment, Quastion } from '../mainClasses';
-import { take } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,39 +9,59 @@ import { take } from 'rxjs/operators';
 
 export class QuationsService {
   comments: Comment[];
+  commnetsRef: AngularFireList<Comment> = this.db.list('comments');
   commentNextNumber: number;
 
   quastions: Quastion[];
+  questionsRef: AngularFireList<Quastion> = this.db.list('quastions');
   quastionNextNumber: number;
 
+  tagsRef: AngularFireList<string> = this.db.list('tags');
   tags: string[];
 
   constructor(public db: AngularFireDatabase) {
     setTimeout( () => {
-      this.db.list<Quastion>('quastions').valueChanges().subscribe( (quastions: Quastion[]) => {
-        this.quastions = quastions;
-      });
+      this.questionsRef.valueChanges()
+        .pipe(
+          map(res => {
+            res = res.filter(res1 => !res1.deleted);
 
-      this.db.list('comments').valueChanges().subscribe( (comments: Comment[]) => {
-        this.comments = comments;
-      });
+            return res;
+          })
+        )
+        .subscribe( (quastions: Quastion[]) => {
+          this.quastions = quastions;
+        });
 
-      this.db.list('tags').valueChanges().subscribe( (tags: string[]) => {
-        this.tags = tags;
-      });
+      this.commnetsRef.valueChanges()
+        .pipe(
+          map(res => {
+            res = res.filter(res1 => !res1.deleted);
+
+            return res;
+          })
+        )
+        .subscribe( (comments: Comment[]) => {
+          this.comments = comments;
+        });
+
+      this.tagsRef.valueChanges()
+        .subscribe( (tags: string[]) => {
+          this.tags = tags;
+        });
     }, 7);
   }
 
   sendQuastion(quastion: Quastion): void {
     quastion.id = this.quastions ? this.quastions.length || 0 : 0;
 
-    this.db.list('quastions').push(quastion);
+    this.questionsRef.push(quastion);
   }
 
   sendComment(comment: Comment): void {
-    comment.id = this.comments ? this.comments.length || 0 : 0;
+    comment.id = this.comments ? (this.comments.length + 1) || 1 : 1;
 
-    this.db.list('comments').push(comment);
+    this.commnetsRef.push(comment);
   }
 
 
@@ -50,15 +70,29 @@ export class QuationsService {
   }
 
   getQuastionsValuesChanges() {
-    return this.db.list('quastions').valueChanges();
+    return this.questionsRef.valueChanges()
+      .pipe(
+        map(res => {
+          res = res.filter(res1 => !res1.deleted);
+
+          return res;
+        })
+      );
   }
 
   getCommentsValuesChanges() {
-    return this.db.list('comments').valueChanges();
+    return this.commnetsRef.valueChanges()
+      .pipe(
+        map(res => {
+          res = res.filter(res1 => !res1.deleted);
+
+          return res;
+        })
+      );
   }
 
   getTagsValuesChanges() {
-    return this.db.list('tags').valueChanges();
+    return this.tagsRef.valueChanges();
   }
 
   getComments() {
@@ -74,7 +108,8 @@ export class QuationsService {
         }
       });
     });
-    tags.filter( (tag) => {
+
+    tags = tags.filter( (tag) => {
       let result = true;
       if (alreadyExistTags) {
         alreadyExistTags.forEach( (tagForRemove) => {
@@ -88,8 +123,10 @@ export class QuationsService {
     console.log(alreadyExistTags);
     console.log(tags);
 
+    // if (this,tags.)
+
     tags.forEach(tag => {
-      this.db.list('tags').push(tag);
+      this.tagsRef.push(tag);
     });
   }
 
@@ -103,7 +140,8 @@ export class QuationsService {
       });
 
       approvedQuastion.approved = true;
-      this.db.list('quastions').update(key, {
+      console.log(approvedQuastion);
+      this.questionsRef.set(key, {
         approved: true,
         title: approvedQuastion.title,
         id: approvedQuastion.id,
@@ -111,11 +149,12 @@ export class QuationsService {
         description: approvedQuastion.description,
         author: approvedQuastion.author,
         dateOfCreation: approvedQuastion.dateOfCreation,
-        answerID: approvedQuastion.answerID,
+        answerID: approvedQuastion.answerID || 0,
+        deleted: approvedQuastion.deleted || false
       });
     };
 
-    this.db.list('quastions').snapshotChanges().forEach( changes => {
+    this.questionsRef.snapshotChanges().forEach( changes => {
       changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
           if (response.payload.val().id === id)  {
           sendApproveQuestion(response.key);
@@ -125,6 +164,7 @@ export class QuationsService {
   }
 
   markAnswer(id: number, commentId: number) {
+    console.log(commentId);
     const sendApproveQuestion = (key: string) => {
       let approvedQuastion: Quastion;
       this.quastions.forEach((quastion: Quastion) => {
@@ -133,7 +173,7 @@ export class QuationsService {
         }
       });
 
-      this.db.list('quastions').set(key, {
+      this.questionsRef.set(key, {
         approved: approvedQuastion.approved,
         title: approvedQuastion.title,
         id: approvedQuastion.id,
@@ -142,10 +182,11 @@ export class QuationsService {
         author: approvedQuastion.author,
         dateOfCreation: approvedQuastion.dateOfCreation,
         answerID: commentId,
+        deleted: approvedQuastion.deleted
       });
     };
 
-    this.db.list('quastions').snapshotChanges().forEach( (changes) => {
+    this.questionsRef.snapshotChanges().forEach( (changes) => {
       changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
         if (response.payload.val().id === id)  {
           sendApproveQuestion(response.key);
@@ -155,31 +196,50 @@ export class QuationsService {
   }
 
   deleteQuestion(id: number) {
-    const removeQuestionComments = (questionId: number) => {
-      this.db.list('comments').snapshotChanges().forEach( changes => {
-        changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Comment>>) => {
-          if (response.payload.val().quastionId === questionId) {
-            this.deleteComment(response.payload.val().id);
-          }
-        });
-      });
-    };
+    // const removeQuestionComments = (questionId: number) => {
+    //   this.commnetsRef.snapshotChanges().forEach( changes => {
+    //     changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Comment>>) => {
+    //       if (response.payload.val().quastionId === questionId) {
+    //         this.deleteComment(response.payload.val().id);
+    //       }
+    //     });
+    //   });
+    // };
 
-    this.db.list('quastions').snapshotChanges().forEach( changes => {
+    this.questionsRef.snapshotChanges().forEach( changes => {
       changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
           if (response.payload.val().id === id)  {
-          this.db.list('quastions').remove(response.key);
-          removeQuestionComments(id);
+            this.questionsRef.set(response.key, {
+              approved: response.payload.val().approved,
+              title: response.payload.val().title,
+              id: response.payload.val().id,
+              tags: response.payload.val().tags,
+              description: response.payload.val().description,
+              author: response.payload.val().author,
+              dateOfCreation: response.payload.val().dateOfCreation,
+              answerID: response.payload.val().answerID,
+              deleted: true
+            });
+          // this.questionsRef.remove(response.key);
+          // removeQuestionComments(id);
         }
       });
     });
   }
 
   deleteComment(id: number) {
-    this.db.list('comments').snapshotChanges().forEach( changes => {
+    this.commnetsRef.snapshotChanges().forEach( changes => {
       changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Comment>>) => {
           if (response.payload.val().id === id)  {
-          this.db.list('comments').remove(response.key);
+            this.commnetsRef.set(response.key, {
+              id: response.payload.val().id,
+              quastionId: response.payload.val().quastionId,
+              description: response.payload.val().description,
+              author: response.payload.val().author,
+              dateOfCreation: response.payload.val().dateOfCreation,
+              deleted: false
+            });
+          // this.commnetsRef.remove(response.key);
         }
       });
     });
@@ -194,10 +254,10 @@ export class QuationsService {
         }
       });
 
-      this.db.list('quastions').set(key, questionForSend);
+      this.questionsRef.set(key, questionForSend);
     };
     console.log(id, questionForSend);
-    this.db.list('quastions').snapshotChanges().forEach( changes => {
+    this.questionsRef.snapshotChanges().forEach( changes => {
       changes.forEach( (response: AngularFireAction<DatabaseSnapshot<Quastion>>) => {
           if (response.payload.val().id === +id)  {
           sendApproveQuestion(response.key);

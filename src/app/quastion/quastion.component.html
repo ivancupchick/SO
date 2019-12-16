@@ -1,4 +1,4 @@
-<mat-card *ngIf="quastion" class="example-card">    
+<mat-card *ngIf="quastion" class="example-card">
   <div class="authorAndDate">
     <div class="author">
         <div mat-card-avatar style.background-image="url({{showUserPhotoURL(quastion.author)}})" class="card-avatar"></div>
@@ -31,7 +31,7 @@
     <div>
       <button color="primary" *ngIf="!quastion.approved && (userInfo?.role == 'Admin' || userInfo?.role == 'Moderator')" (click)="approveQuestion(quastion.id)" mat-raised-button>Approve</button>
       <button routerLink="/editquastion/{{quastionId}}" *ngIf="quastion.author === user?.uid || userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' " mat-raised-button color="accent">Edit</button>
-      <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' || quastion.author === user?.uid" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>    
+      <button color="warn" *ngIf="userInfo?.role == 'Admin' || userInfo?.role == 'Moderator' || quastion.author === user?.uid" (click)="deleteQuestion(quastion.id)" mat-raised-button>Delete</button>
     </div>
   </mat-card-footer>
 </mat-card>
@@ -46,12 +46,12 @@
   <mat-card-content>
     <!---->
     <mat-card *ngFor="let comment of comments" class="example-card" [class.asAnswer] = "comment.id === quastion.answerID">
-      
+
       <mat-card-header>
         <mat-card-title>{{showUserName(comment.author)}}</mat-card-title>
         <mat-card-subtitle>{{showUserEmail(comment.author)}}</mat-card-subtitle>
       </mat-card-header>
-    
+
       <mat-card-content style="display: flex; justify-content:space-between;">
         <div>
           <div style="margin: 10px;" mat-card-avatar style.background-image="url({{showUserPhotoURL(comment.author)}})" class="card-avatar"></div>
@@ -61,7 +61,7 @@
         </p>
         <div style="margin:0 10px; display:flex; flex-direction:column; justify-content:space-between; align-items:center;">
             <div>{{comment.dateOfCreation  | date:"dd.MM.yyyy"}}</div>
-            <button *ngIf="comment.author === user?.uid && 0 === quastion.answerID" mat-raised-button (click)="markComment(comment.id)" color="accent">Mark</button>
+            <button *ngIf="quastion.author === user?.uid && 0 === quastion.answerID" mat-raised-button (click)="markComment(comment.id)" color="accent">Mark</button>
                                                       <!-- comment.id !== quastion.answerID -->
         </div>
       </mat-card-content>
@@ -85,7 +85,7 @@
   <form class="example-container" #formData='ngForm' (ngSubmit)="onSubmit(formData)" >
     <mat-form-field>
       <mat-label>Descripton</mat-label>
-      <textarea matInput maxlength="1000" (ngModel)="commentDescription" name="commentDescription" placeholder="Your solution is ..."></textarea>
+      <textarea matInput maxlength="1000" [(ngModel)]="commentDescription" name="commentDescription" placeholder="Your solution is ..."></textarea>
     </mat-form-field>
     <button mat-raised-button type="submit" [disabled]="!formData.valid" color="primary">Send Answer</button>
   </form>
