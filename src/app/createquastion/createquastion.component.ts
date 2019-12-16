@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 import { User } from 'firebase/app';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { QuationsService } from '../quations.service';
+import { QuationsService } from '../services/quations.service';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';

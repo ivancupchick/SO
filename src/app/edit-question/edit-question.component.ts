@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
-import { QuationsService } from '../quations.service';
+import { QuationsService } from '../services/quations.service';
 import { Quastion } from '../mainClasses';
 
 @Component({

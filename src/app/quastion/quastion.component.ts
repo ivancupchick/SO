@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { QuationsService } from '../quations.service';
+import { QuationsService } from '../services/quations.service';
 import { User } from 'firebase/app';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 import { UserInfo, Comment, Quastion } from '../mainClasses';
 
 @Component({

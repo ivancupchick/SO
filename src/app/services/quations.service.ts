@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireAction, DatabaseSnapshot } from '@angular/fire/database';
-import { Comment, Quastion, LengthNumber } from './mainClasses';
+import { Comment, Quastion, LengthNumber } from '../mainClasses';
 import { take } from 'rxjs/operators';
 
 @Injectable({

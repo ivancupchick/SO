@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { QuationsService } from '../quations.service';
+import { QuationsService } from '../services/quations.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { UserInfo, Quastion } from '../mainClasses';
+import { Quastion, UserInfo } from '../mainClasses';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-quastions',
@@ -22,7 +22,7 @@ export class QuastionsComponent implements OnInit {
 
 
   // filters
-  isAnswered: string = 'none';
+  isAnswered = 'none';
   onModeration = false;
   myQuestions = false;
   isFilterDate = false;
@@ -119,7 +119,7 @@ export class QuastionsComponent implements OnInit {
   }
 
   filters() {
-    this.displayQuestions = [...this.questions];
+    this.displayQuestions = [ ...this.questions ];
     try {
       if (this.isAnswered === 'isAnswered') {
         this.displayQuestions = this.displayQuestions.filter( (question: Quastion) => question.answerID !== 0);

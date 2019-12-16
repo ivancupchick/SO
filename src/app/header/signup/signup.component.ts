@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { MatDialogRef } from '@angular/material';
 
 @Component({
@@ -25,7 +25,7 @@ export class SignupComponent implements OnInit {
 
   /*
     if(formData.valid) {
-      let result = 
+      let result =
       if (!result) {
         this.hide();
       } else {

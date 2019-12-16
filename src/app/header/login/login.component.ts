@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 import { MatDialogRef } from '@angular/material';
 
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(formData) {
-    this.authService.loginWithEmail(formData.value.email, formData.value.password)
+    this.authService.loginWithEmail(formData.value.email, formData.value.password) // formData.value.name
       .subscribe(success => {
         console.log(success);
         this.hide();
@@ -51,5 +51,4 @@ export class LoginComponent implements OnInit {
   hide() {
     this.matDialogRef.close();
   }
-
 }
