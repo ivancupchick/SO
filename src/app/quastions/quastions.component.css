@@ -1,4 +1,4 @@
-/* Global styles */ 
+/* Global styles */
 .card-avatar {
   background-size: cover;
 }
@@ -13,7 +13,7 @@
   display:none;
 }
 
-/* Tiles styles */ 
+/* Tiles styles */
 .tiles {
   display: flex;
   justify-content: space-around;
@@ -83,10 +83,10 @@
   margin: 0 5px;
 }
 
-/* Lines styles */ 
+/* Lines styles */
 
 .lines {
-  
+
 }
 
 .lines div mat-card {
@@ -95,14 +95,18 @@
 
 .lines div mat-card mat-card-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 10px;
 
   padding-bottom: 10px;
   border-bottom: 1px solid black;
 }
 
 .lines div mat-card mat-card-header mat-card-title {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
 .lines div mat-card mat-card-content {
@@ -135,7 +139,7 @@
   display: flex;
   justify-content: flex-end;
 
-  padding: 20px;
+  padding: 0px 10px 16px;
 }
 
 .lines div mat-card mat-card-footer button {
@@ -145,10 +149,3 @@
 mat-form-field {
   width: 120px;
 }
-
-
-
-
-
-
-

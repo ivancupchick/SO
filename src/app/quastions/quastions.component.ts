@@ -17,7 +17,7 @@ export class QuastionsComponent implements OnInit {
   displayQuestions: Quastion[];
   userInfo: UserInfo;
 
-  setting = true;
+  setting = false;
   isSorted = false;
 
 

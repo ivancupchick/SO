@@ -14,8 +14,8 @@
         <button *ngIf="authService.user" routerLink="quastion" mat-raised-button color="accent" >New question</button>
         <button mat-button [matMenuTriggerFor]="menu">{{ (authService.user | async)?.email }}</button>
         <mat-menu #menu="matMenu">
-          <button (click)="linkToProfile()" mat-menu-item>Profile</button>
-          <button (click)="logout()" mat-menu-item>Sign out</button>
+          <button (click)="linkToProfile()" mat-menu-item>Профиль</button>
+          <button (click)="logout()" mat-menu-item>Выйти</button>
         </mat-menu>
     </div>
   </mat-toolbar-row>
