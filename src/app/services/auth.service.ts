@@ -5,6 +5,7 @@ import { User, auth } from 'firebase/app';
 
 import { Observable, from, of } from 'rxjs';
 import { UserInfo } from '../mainClasses';
+import { take } from 'rxjs/operators';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ export class AuthService {
   userId: string;
 
   linkUsers: AngularFireList<UserInfo>;
-  users: UserInfo[];
+  users: UserInfo[] = [];
   userInfo: UserInfo;
   usersLength: number;
 
@@ -39,23 +40,32 @@ export class AuthService {
 
   private pushUserInfoToDB(credential: auth.UserCredential) { // users: UserInfo[]
     let count = true;
-    this.users.forEach( (user: UserInfo) => {
+    this.users.forEach((user: UserInfo) => {
       if (user.uid === credential.user.uid) {
         count = false;
       }
     });
+
     if (count) {
-      console.log('User sending to db...'); // delete this line
-      this.db.list('users').push({
-        uid: credential.user.uid,
-        id: this.usersLength,
-        role: 'User',
-        name: credential.user.displayName || 'Anonymous',
-        email: credential.user.email,
-        photoUrl: credential.user.photoURL || 'https://material.angular.io/assets/img/examples/shiba1.jpg',
+      this.db.list('users').valueChanges().pipe(take(1)).subscribe(r => {
+        this.usersLength = (r as []).length;
+
+        this.db.list('users').push({
+          uid: credential.user.uid,
+          id: this.usersLength,
+          role: 'User',
+          name: credential.user.displayName || 'Anonymous',
+          email: credential.user.email,
+          photoUrl: credential.user.photoURL || 'https://material.angular.io/assets/img/examples/shiba1.jpg',
+        });
       });
     }
   }
+/*
+flig234234234o14@gmail.com
+123456@re
+
+*/
 
   getUser(): any {
     return this.afAuth.authState;
