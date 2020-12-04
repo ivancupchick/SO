@@ -61,11 +61,6 @@ export class AuthService {
       });
     }
   }
-/*
-flig234234234o14@gmail.com
-123456@re
-
-*/
 
   getUser(): any {
     return this.afAuth.authState;
